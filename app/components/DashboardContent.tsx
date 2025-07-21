@@ -120,11 +120,7 @@ export default function DashboardContent() {
                 <h2 className="text-xl font-bold text-gray-900">
                   Current Rentals
                 </h2>
-                <Button
-                  href="/dashboard/rentals"
-                  variant="outline"
-                  size="sm"
-                >
+                <Button href="/dashboard/rentals" variant="outline" size="sm">
                   View All
                 </Button>
               </div>

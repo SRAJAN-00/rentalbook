@@ -146,7 +146,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-neutral-100 lg:hidden"
           onClick={onToggle}
         />
       )}
@@ -158,12 +158,12 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         } w-56 lg:translate-x-0 flex flex-col`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 h-15 bg-white border-b border-r border-gray-200">
+        <div className="flex items-center justify-between p-6 h-15 bg-white border-b border-r rounded-t-xl border-gray-300">
           <div className="flex items-center space-x-3">
-            <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-blue-700 rounded-sm flex items-center justify-center">
+            <div className="w-6 h-6  rounded-sm flex items-center justify-center">
               <span className="text-white text-sm font-bold">R</span>
             </div>
-            <span className="text-md font-bold text-gray-900">RentalBook</span>
+            <span className="text-xl font-bold text-gray-900">RentalBook</span>
           </div>
           <button
             onClick={onToggle}
@@ -186,14 +186,14 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2 border rounded-xl overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-2 border border-gray-300  rounded-b-xl overflow-y-auto">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.id}
                 href={item.href}
-                className={`flex items-center space-x-3 px-2 py-1 rounded-lg transition-all duration-200 group ${
+                className={`flex items-center space-x-3 px-2 py-1  transition-all duration-200 group ${
                   isActive
                     ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700"
                     : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -221,7 +221,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         </nav>
 
         {/* User Profile Section */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t rounded-r-xl border-gray-200">
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t rounded-r-xl border-gray-300">
           <div className="flex items-center space-x-3 p-3 border rounded-r-lg bg-gray-50">
             <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-semibold">JD</span>
