@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
 
 const menuItems = [
   {
@@ -140,6 +141,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
   const pathname = usePathname();
+  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
     <>
@@ -187,35 +189,57 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2 border border-gray-300  rounded-b-xl overflow-y-auto">
-          {menuItems.map((item) => {
+          {menuItems.map((item, idx) => {
             const isActive = pathname === item.href;
             return (
-              <Link
+              <motion.div
                 key={item.id}
-                href={item.href}
-                className={`flex items-center space-x-3 px-2 py-1  transition-all duration-200 group ${
-                  isActive
-                    ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                }`}
-                onClick={() => {
-                  // Close mobile menu when item is clicked
-                  if (window.innerWidth < 1024) {
-                    onToggle();
-                  }
-                }}
+                className="relative"
+                transition={{}}
+                onMouseEnter={() => setHovered(idx)}
+                onMouseLeave={() => setHovered(null)}
               >
-                <span
-                  className={`${
+                <AnimatePresence>
+                  {hovered === idx && !isActive && (
+                    <motion.div
+                      layoutId="navhover"
+                      className="absolute inset-0 rounded-xl bg-gray-200 pointer-events-none"
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                    />
+                  )}
+                </AnimatePresence>
+
+                <Link
+                  href={item.href}
+                  className={`flex items-center group relative text-gray-700 space-x-3 px-2 py-1 rounded-xl z-10 ${
                     isActive
-                      ? "text-blue-700"
-                      : "text-gray-400 group-hover:text-gray-600"
+                      ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700"
+                      : ""
                   }`}
+                  onClick={() => {
+                    // Close mobile menu when item is clicked
+                    if (window.innerWidth < 1024) {
+                      onToggle();
+                    }
+                  }}
                 >
-                  {item.icon}
-                </span>
-                <span className="font-medium">{item.label}</span>
-              </Link>
+                  <motion.span
+                    className={`relative z-10 ${
+                      isActive
+                        ? "text-blue-700"
+                        : "text-gray-400 group-hover:text-gray-900"
+                    }`}
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  >
+                    {item.icon}
+                  </motion.span>
+                  <span className="relative z-10  group-hover:text-gray-900 font-medium">
+                    {item.label}
+                  </span>
+                </Link>
+              </motion.div>
             );
           })}
         </nav>

@@ -1,32 +1,9 @@
+"use client";
+import { useState, useEffect } from "react";
 import Button from "./ModernButton";
 import DashboardStats from "./DashboardStats";
-
-const recentBooks = [
-  {
-    id: "1",
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    coverUrl: null,
-    dueDate: "2025-07-25",
-    status: "active",
-  },
-  {
-    id: "2",
-    title: "1984",
-    author: "George Orwell",
-    coverUrl: null,
-    dueDate: "2025-07-28",
-    status: "active",
-  },
-  {
-    id: "3",
-    title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    coverUrl: null,
-    dueDate: "2025-07-15",
-    status: "overdue",
-  },
-];
+import { init } from "next/dist/compiled/webpack/webpack";
+import { AnimatePresence, motion } from "motion/react";
 
 const recentActivity = [
   {
@@ -95,16 +72,65 @@ const recentActivity = [
 ];
 
 export default function DashboardContent() {
+  const [recentBooks, setRecentBooks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchRentals = async () => {
+      try {
+        const response = await fetch("/api/user/rentals");
+        const data = await response.json();
+
+        if (data.success) {
+          // Transform rental data to match UI expectations
+          const transformedRentals = data.data.map(
+            (rental: {
+              _id: any;
+              bookId: { _id: any; title: any; author: any };
+              dueDate: string | number | Date;
+              status: any;
+            }) => ({
+              id: rental._id,
+              bookId: rental.bookId?._id || rental.bookId, // Use the actual book ID
+              title: rental.bookId?.title || "Unknown Title",
+              author: rental.bookId?.author || "Unknown Author",
+              dueDate: new Date(rental.dueDate).toLocaleDateString(),
+              status: rental.status,
+            })
+          );
+          setRecentBooks(transformedRentals);
+        }
+      } catch (error) {
+        console.error("Error fetching rentals:", error);
+      }
+    };
+
+    fetchRentals();
+  }, []);
+  function enterAnimation(
+    delay: number = 0.3,
+    x: number = 0,
+    duration: number = 0.4
+  ) {
+    return {
+      initial: { opacity: 0, x: -10 },
+      animate: { opacity: 1, x: 0 },
+      transition: { delay, duration },
+    };
+  }
+
   return (
     <div className="space-y-8">
       {/* Welcome Message */}
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
+        <motion.h2
+          {...enterAnimation(0.1)}
+          className="text-3xl font-bold text-gray-900 mb-2"
+        >
           Welcome to Your Dashboard
-        </h2>
-        <p className="text-gray-600">
+        </motion.h2>
+        <motion.p {...enterAnimation(0.2)} className="text-gray-600">
           Manage your rentals and discover new books
-        </p>
+        </motion.p>
       </div>
 
       {/* Statistics Cards */}
@@ -114,7 +140,7 @@ export default function DashboardContent() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Current Rentals */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl border border-gray-200 [box-shadow:0_2px_4px_rgba(0,0,0,0.1)]">
+          <div className="bg-white rounded-lg border border-gray-200 [box-shadow:0_2px_4px_rgba(0,0,0,0.1)]">
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">
@@ -126,58 +152,73 @@ export default function DashboardContent() {
               </div>
             </div>
             <div className="p-5">
-              {recentBooks.length > 0 ? (
-                <div className="space-y-4">
-                  {recentBooks.map((book) => (
-                    <div
-                      key={book.id}
-                      className="flex items-center space-x-4 h-20 p-4 bg-gray-50 rounded-lg"
-                    >
-                      <div className="w-12 h-16 bg-gradient-to-br  from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-                        <span className="text-2xl">📚</span>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 truncate">
-                          {book.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          by {book.author}
-                        </p>
-                        <div className="flex items-center mt-2">
-                          <span className="text-xs text-gray-500">
-                            Due: {book.dueDate}
-                          </span>
-                          <span
-                            className={`ml-3 px-2 py-1 text-xs font-medium rounded-full ${
-                              book.status === "active"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {book.status === "active" ? "Active" : "Overdue"}
-                          </span>
+              <AnimatePresence>
+                {recentBooks.length > 0 ? (
+                  <div key="rentals-list" className="space-y-4">
+                    {recentBooks.map((book, idx) => (
+                      <motion.div
+                        {...enterAnimation(0.1 + idx * 0.1)}
+                        key={book.id}
+                        className="flex items-center space-x-4 h-20 p-4 bg-gray-50 rounded-lg"
+                        whileHover={{
+                          scale: 1.02,
+                          backgroundColor: "#f8fafc",
+                          transition: { duration: 0.2 },
+                        }}
+                        whileTap={{
+                          scale: 0.98,
+                        }}
+                      >
+                        <div className="w-12 h-16 bg-gradient-to-br  from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
+                          <span className="text-2xl">📚</span>
                         </div>
-                      </div>
-                      <Button variant="outline" size="sm">
-                        Return
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">📚</div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    No current rentals
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Start exploring our book collection!
-                  </p>
-                  <Button href="/books" variant="primary">
-                    Browse Books
-                  </Button>
-                </div>
-              )}
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-gray-900 truncate">
+                            {book.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            by {book.author}
+                          </p>
+                          <div className="flex items-center mt-2">
+                            <span className="text-xs text-gray-500">
+                              Due: {book.dueDate}
+                            </span>
+                            <span
+                              className={`ml-3 px-2 py-1 text-xs font-medium rounded-full ${
+                                book.status === "active"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {book.status === "active" ? "Active" : "Overdue"}
+                            </span>
+                          </div>
+                        </div>
+                        <Button
+                          href={`/books/${book.bookId}`}
+                          variant="outline"
+                          size="sm"
+                        >
+                          View Details
+                        </Button>
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <div key="no-rentals" className="text-center py-12">
+                    <div className="text-6xl mb-4">📚</div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      No current rentals
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      Start exploring our book collection!
+                    </p>
+                    <Button href="/books" variant="primary">
+                      Browse Books
+                    </Button>
+                  </div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -190,8 +231,17 @@ export default function DashboardContent() {
               Recent Activity
             </h2>
             <div className="space-y-4">
-              {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3">
+              {recentActivity.map((activity, idx) => (
+                <motion.div
+                  key={activity.id}
+                  className="flex items-start space-x-3"
+                  {...enterAnimation(0.1 + idx * 0.05)}
+                  whileHover={{
+                    x: 5,
+                    backgroundColor: "#f8fafc",
+                    transition: { duration: 0.2 },
+                  }}
+                >
                   <div className="flex-shrink-0 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
                     {activity.icon}
                   </div>
@@ -202,7 +252,7 @@ export default function DashboardContent() {
                     </p>
                     <p className="text-xs text-gray-500">{activity.time}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

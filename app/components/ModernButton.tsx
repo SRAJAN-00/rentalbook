@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { easeInOut, motion } from "motion/react";
 
 type ButtonVariant = "primary" | "secondary" | "success" | "outline";
 type ButtonSize = "sm" | "md" | "lg";
@@ -31,18 +32,15 @@ export default function Button({
 }: ButtonProps) {
   // Sleek minimal base styles
   const baseStyles =
-    "font-normal rounded-lg transition-all duration-200 inline-flex items-center justify-center focus:outline-none shadow-md drop-shadow-sm [box-shadow:inset_0_1px_2px_rgba(255,255,255,0.1),0_4px_6px_rgba(0,0,0,0.1)]";
+    "font-normal rounded-lg inline-flex items-center justify-center focus:outline-none shadow-md drop-shadow-sm [box-shadow:inset_0_1px_2px_rgba(255,255,255,0.1),0_4px_6px_rgba(0,0,0,0.1)]";
 
   // Elegant variant style
   const variantStyles = {
-    primary:
-      "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:bg-gray-800 shadow-sm hover:shadow-md hover:[box-shadow:inset_0_1px_2px_rgba(255,255,255,0.2),0_6px_12px_rgba(0,0,0,0.15)]",
-    secondary:
-      "bg-gray-100 text-gray-900 hover:bg-gray-200 shadow-sm hover:shadow-md hover:[box-shadow:inset_0_1px_2px_rgba(255,255,255,0.2),0_6px_12px_rgba(0,0,0,0.15)]",
+    primary: "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm",
+    secondary: "bg-gray-100 text-gray-900 shadow-sm",
     success:
-      "bg-transparent font-bold border border-blue-400 text-blue-700 hover:bg-blue-100 shadow-xs hover:shadow-md hover:[box-shadow:inset_0_1px_2px_rgba(255,255,255,0.2),0_6px_12px_rgba(0,0,0,0.15)]",
-    outline:
-      "border border-gray-300 text-gray-700 bg-white hover:border-gray-400 hover:bg-gray-50  hover:shadow-md hover:[box-shadow:inset_0_1px_2px_rgba(255,255,255,0.2),0_6px_12px_rgba(0,0,0,0.15)]",
+      "bg-transparent font-bold border border-blue-400 text-blue-700 shadow-xs",
+    outline: "border border-gray-300 text-gray-700 bg-white",
   };
 
   // Compact size styles
@@ -59,15 +57,27 @@ export default function Button({
   const buttonClasses =
     `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabledStyles} ${className}`.trim();
 
-  // Button content with icon support
+  // Button content with animated icons
   const buttonContent = (
     <>
       {icon && iconPosition === "left" && (
-        <span className="flex-shrink-0">{icon}</span>
+        <motion.span
+          className="flex-shrink-0"
+          whileHover={{ scale: 1.1, rotate: -5 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
+          {icon}
+        </motion.span>
       )}
       <span>{children}</span>
       {icon && iconPosition === "right" && (
-        <span className="flex-shrink-0">{icon}</span>
+        <motion.span
+          className="flex-shrink-0"
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        >
+          {icon}
+        </motion.span>
       )}
     </>
   );
@@ -75,21 +85,42 @@ export default function Button({
   // If href is provided, render as Link
   if (href) {
     return (
-      <Link href={href} className={buttonClasses}>
-        {buttonContent}
-      </Link>
+      <motion.div
+        whileHover={{
+          scale: 1.02,
+
+          transition: {
+            duration: 0.1,
+
+            ease: "easeInOut",
+          },
+        }}
+      >
+        <Link href={href} className={buttonClasses}>
+          {buttonContent}
+        </Link>
+      </motion.div>
     );
   }
 
   // Otherwise render as button
   return (
-    <button
+    <motion.button
+      whileHover={{
+        scale: 1.02,
+        transition: {
+          duration: 0.03,
+        },
+      }}
+      whileTap={{
+        scale: 0.98,
+      }}
       type={type}
       onClick={onClick}
       disabled={disabled}
       className={buttonClasses}
     >
       {buttonContent}
-    </button>
+    </motion.button>
   );
 }

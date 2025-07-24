@@ -1,3 +1,8 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Button from "../../components/ModernButton";
@@ -38,12 +43,111 @@ async function getBook(id: string): Promise<Book | null> {
   }
 }
 
-export default async function BookDetailsPage({
+export default function BookDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const book = await getBook(params.id);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [book, setBook] = useState<Book | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isRented, setIsRented] = useState(false);
+  const [checkingRental, setCheckingRental] = useState(false);
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/signin");
+    }
+  }, [status, router]);
+
+  // Fetch book data and check rental status
+  useEffect(() => {
+    async function fetchBookAndCheckRental() {
+      if (session) {
+        try {
+          const { id } = await params;
+          const bookData = await getBook(id);
+          setBook(bookData);
+
+          // Check if user has already rented this book
+          if (bookData) {
+            setCheckingRental(true);
+            const response = await fetch(`/api/rentals/check?bookId=${id}`);
+            if (response.ok) {
+              const result = await response.json();
+              if (result.success) {
+                setIsRented(result.isRented);
+              }
+            }
+            setCheckingRental(false);
+          }
+        } catch (error) {
+          console.error("Error fetching book:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
+
+    if (status === "authenticated") {
+      fetchBookAndCheckRental();
+    }
+  }, [session, status, params]);
+
+  const handleReturnBook = async () => {
+    if (!book) return;
+
+    // Add loading state
+    setCheckingRental(true);
+
+    try {
+      const response = await fetch(`/api/rentals/return`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookId: book._id }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Success! Update the UI
+        setIsRented(false);
+        alert("Book returned successfully!");
+
+        // Optionally refresh book data to update available copies
+        const { id } = await params;
+        const updatedBook = await getBook(id);
+        if (updatedBook) {
+          setBook(updatedBook);
+        }
+      } else {
+        alert(result.error || "Failed to return book");
+      }
+    } catch (error) {
+      console.error("Error returning book:", error);
+      alert("Error returning book. Please try again.");
+    } finally {
+      setCheckingRental(false);
+    }
+  };
+
+  // Show loading while checking authentication
+  if (status === "loading" || loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated (will redirect)
+  if (!session) {
+    return null;
+  }
 
   if (!book) {
     notFound();
@@ -55,7 +159,7 @@ export default async function BookDetailsPage({
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link
               href="/books"
@@ -162,12 +266,28 @@ export default async function BookDetailsPage({
 
               {/* Action Buttons */}
               <div className="flex gap-4">
-                {isAvailable ? (
+                {isAvailable && !isRented ? (
                   <>
                     <RentModal bookId={book._id} />
                     <Link href="/books">
                       <Button variant="outline" className="px-8">
                         Back to Library
+                      </Button>
+                    </Link>
+                  </>
+                ) : isRented ? (
+                  <>
+                    <Button
+                      onClick={handleReturnBook}
+                      variant="secondary"
+                      className="px-8"
+                      disabled={checkingRental}
+                    >
+                      {checkingRental ? "Returning..." : "Return Book"}
+                    </Button>
+                    <Link href="/dashboard">
+                      <Button variant="outline" className="px-8">
+                        View My Rentals
                       </Button>
                     </Link>
                   </>

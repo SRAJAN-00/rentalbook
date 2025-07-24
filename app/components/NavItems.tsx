@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Button from "./ModernButton";
 
 const navItems = [
@@ -11,13 +13,51 @@ const navItems = [
   { href: "/rentals", label: "My Rentals" },
 ];
 
-const actionButtons = [
-  { href: "/api/seed", label: "✨ Seed Data", variant: "success" as const },
-  { href: "#", label: "Sign In", variant: "primary" as const, isButton: true },
-];
-
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
+
+  const handleSignIn = () => {
+    router.push("/auth/signin");
+  };
+
+  // Dynamic action buttons based on authentication status
+  const getActionButtons = () => {
+    const baseButtons = [
+      { href: "/api/seed", label: "✨ Seed Data", variant: "success" as const },
+    ];
+
+    if (session) {
+      // User is signed in - show sign out button
+      return [
+        ...baseButtons,
+        {
+          label: "Sign Out",
+          variant: "primary" as const,
+          isButton: true,
+          onClick: handleSignOut,
+        },
+      ];
+    } else {
+      // User is not signed in - show sign in button
+      return [
+        ...baseButtons,
+        {
+          label: "Sign In",
+          variant: "primary" as const,
+          isButton: true,
+          onClick: handleSignIn,
+        },
+      ];
+    }
+  };
+
+  const actionButtons = getActionButtons();
 
   const getButtonStyles = (style: string) => {
     const baseStyles =
@@ -58,22 +98,31 @@ export default function Navbar() {
 
           {/* Right side: Action Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            {actionButtons.map((button) =>
-              button.isButton ? (
-                <Button key={button.label} variant={button.variant} size="sm">
-                  {button.label}
-                </Button>
-              ) : (
-                <Button
-                  key={button.href}
-                  href={button.href}
-                  variant={button.variant}
-                  size="sm"
-                >
-                  {button.label}
-                </Button>
-              )
-            )}
+            {actionButtons.map((button) => {
+              if ("isButton" in button && button.isButton) {
+                return (
+                  <Button
+                    key={button.label}
+                    variant={button.variant}
+                    size="sm"
+                    onClick={button.onClick}
+                  >
+                    {button.label}
+                  </Button>
+                );
+              } else {
+                return (
+                  <Button
+                    key={button.label}
+                    href={"href" in button ? button.href : "#"}
+                    variant={button.variant}
+                    size="sm"
+                  >
+                    {button.label}
+                  </Button>
+                );
+              }
+            })}
           </div>
 
           {/* Mobile Menu Button */}
@@ -116,30 +165,37 @@ export default function Navbar() {
             ))}
 
             <div className="pt-4 pb-2 space-y-2">
-              {actionButtons.map((button) =>
-                button.isButton ? (
-                  <Button
-                    key={button.label}
-                    variant={button.variant}
-                    size="sm"
-                    className="w-full"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {button.label}
-                  </Button>
-                ) : (
-                  <Button
-                    key={button.href}
-                    href={button.href}
-                    variant={button.variant}
-                    size="sm"
-                    className="w-full"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {button.label}
-                  </Button>
-                )
-              )}
+              {actionButtons.map((button) => {
+                if ("isButton" in button && button.isButton) {
+                  return (
+                    <Button
+                      key={button.label}
+                      variant={button.variant}
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        button.onClick();
+                      }}
+                    >
+                      {button.label}
+                    </Button>
+                  );
+                } else {
+                  return (
+                    <Button
+                      key={button.label}
+                      href={"href" in button ? button.href : "#"}
+                      variant={button.variant}
+                      size="sm"
+                      className="w-full"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {button.label}
+                    </Button>
+                  );
+                }
+              })}
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Rental from "@/models/Rental";
 import Book from "@/models/Book";
+import { getServerSession } from "next-auth";
 
 // GET all rentals
 export async function GET() {
@@ -28,6 +29,16 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
+
+    // Get current user session
+    const session = await getServerSession();
+    if (!session || !session.user?.email) {
+      return NextResponse.json(
+        { success: false, error: "You must be logged in to rent a book" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
     // Check if book is available
@@ -46,12 +57,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create rental with due date (14 days from now)
+    // Create rental with due date (14 days from now) and current user info
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 14);
 
     const rental = await Rental.create({
-      ...body,
+      bookId: body.bookId,
+      renterName: session.user.name || "Unknown User",
+      renterEmail: session.user.email,
+      rentDate: new Date(),
       dueDate,
       status: "active",
     });

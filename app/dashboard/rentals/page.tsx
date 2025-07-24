@@ -1,54 +1,53 @@
+"use client";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 import Button from "../../components/ModernButton";
 
-const mockRentals = [
-  {
-    id: "1",
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    genre: "Classic Fiction",
-    rentedDate: "2025-07-10",
-    dueDate: "2025-07-25",
-    status: "active",
-    daysLeft: 6,
-  },
-  {
-    id: "2",
-    title: "1984",
-    author: "George Orwell",
-    genre: "Dystopian Fiction",
-    rentedDate: "2025-07-12",
-    dueDate: "2025-07-28",
-    status: "active",
-    daysLeft: 9,
-  },
-  {
-    id: "3",
-    title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    genre: "Classic Fiction",
-    rentedDate: "2025-06-30",
-    dueDate: "2025-07-15",
-    status: "overdue",
-    daysLeft: -4,
-  },
-  {
-    id: "4",
-    title: "Pride and Prejudice",
-    author: "Jane Austen",
-    genre: "Romance",
-    rentedDate: "2025-06-20",
-    dueDate: "2025-07-05",
-    status: "returned",
-    returnedDate: "2025-07-03",
-  },
-];
-
 export default function RentalsPage() {
-  const activeRentals = mockRentals.filter(
+  const [rentals, setRentals] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchRentals = async () => {
+      try {
+        const response = await fetch("/api/user/rentals");
+        const data = await response.json();
+
+        if (data.success) {
+          // Format rental data for the UI
+          const formattedRentals = data.data.map((rental: any) => ({
+            id: rental._id,
+            bookId: rental.bookId?._id || rental.bookId, // Add the actual book ID
+            title: rental.bookId?.title || "Unknown Title",
+            author: rental.bookId?.author || "Unknown Author",
+            genre: rental.bookId?.genre || "Unknown Genre",
+            rentedDate: new Date(rental.rentDate).toLocaleDateString(),
+            dueDate: new Date(rental.dueDate).toLocaleDateString(),
+            status: rental.status,
+            returnedDate: rental.returnDate
+              ? new Date(rental.returnDate).toLocaleDateString()
+              : undefined,
+            daysLeft:
+              rental.status === "active"
+                ? Math.ceil(
+                    (new Date(rental.dueDate).getTime() -
+                      new Date().getTime()) /
+                      (1000 * 60 * 60 * 24)
+                  )
+                : undefined,
+          }));
+          setRentals(formattedRentals);
+        }
+      } catch (error) {
+        console.error("Error fetching rentals:", error);
+      }
+    };
+
+    fetchRentals();
+  }, []);
+  const activeRentals = rentals.filter(
     (rental) => rental.status === "active" || rental.status === "overdue"
   );
-  const returnedRentals = mockRentals.filter(
+  const returnedRentals = rentals.filter(
     (rental) => rental.status === "returned"
   );
 
@@ -124,8 +123,12 @@ export default function RentalsPage() {
                             ? `${rental.daysLeft} days left`
                             : "Active"}
                         </span>
-                        <Button variant="outline" size="sm">
-                          Return Book
+                        <Button 
+                          href={`/books/${rental.bookId}`}
+                          variant="outline" 
+                          size="sm"
+                        >
+                          View Details
                         </Button>
                       </div>
                     </div>
@@ -193,8 +196,12 @@ export default function RentalsPage() {
                         <span className="bg-gray-100 text-gray-800 px-3 py-1 text-xs font-semibold rounded-full">
                           Returned
                         </span>
-                        <Button variant="outline" size="sm">
-                          Rent Again
+                        <Button 
+                          href={`/books/${rental.bookId}`}
+                          variant="outline" 
+                          size="sm"
+                        >
+                          View Details
                         </Button>
                       </div>
                     </div>

@@ -1,23 +1,63 @@
-import connectDB from "@/lib/mongodb";
-import Book from "@/models/Book";
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import OptimizedBookList from "../components/OptimizedBookList";
 import DashboardLayout from "../components/DashboardLayout";
 
-// Server-side data fetching for fast initial load
-async function getBooks() {
-  try {
-    await connectDB();
-    const books = await Book.find({}).lean().exec(); // .lean() for better performance
-    return JSON.parse(JSON.stringify(books)); // Serialize for client
-  } catch (error) {
-    console.error("Error fetching books:", error);
-    return [];
-  }
-}
+// Client-side component for better authentication handling
+export default function BooksPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [initialBooks, setInitialBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function BooksPage() {
-  // ⚡ Data fetched on server BEFORE page loads
-  const initialBooks = await getBooks();
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/signin");
+    }
+  }, [status, router]);
+
+  // Fetch books on client side
+  useEffect(() => {
+    async function fetchBooks() {
+      if (session) {
+        try {
+          const response = await fetch("/api/books");
+          if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+              setInitialBooks(result.data);
+            }
+          }
+        } catch (error) {
+          console.error("Error fetching books:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
+
+    if (status === "authenticated") {
+      fetchBooks();
+    }
+  }, [session, status]);
+
+  // Show loading while checking authentication
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Don't render anything if not authenticated (will redirect)
+  if (!session) {
+    return null;
+  }
 
   return (
     <DashboardLayout>
@@ -28,8 +68,13 @@ export default async function BooksPage() {
         </p>
       </div>
 
-      {/* ⚡ No loading spinner - data is pre-loaded! */}
-      <OptimizedBookList initialBooks={initialBooks} />
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      ) : (
+        <OptimizedBookList initialBooks={initialBooks} />
+      )}
     </DashboardLayout>
   );
 }
