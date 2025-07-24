@@ -70,9 +70,9 @@ export default function BookCard({ book, onRent }: BookCardProps) {
               </span>
             </div>
             <div onClick={(e) => e.stopPropagation()}>
-              {isAvailable && onRent && (
+              {isAvailable && (
                 <Button
-                  onClick={() => onRent(book._id)}
+                  href={`/books/${book._id}`}
                   variant="primary"
                   size="sm"
                   className="text-xs font-semibold transform hover:scale-105 transition-transform duration-200"
