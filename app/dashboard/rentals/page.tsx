@@ -64,187 +64,200 @@ export default function RentalsPage() {
     >
       {!isLoading && (
         <div className="space-y-8">
-        {/* Active Rentals */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
+          {/* Active Rentals */}
+          <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-lg">📖</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Active Rentals
+                  </h2>
+                </div>
+                <span className="bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-sm">
+                  {activeRentals.length}{" "}
+                  {activeRentals.length === 1 ? "book" : "books"}
+                </span>
+              </div>
+            </div>
+            <div className="p-6 bg-gray-50">
+              {activeRentals.length > 0 ? (
+                <div className="space-y-6">
+                  {activeRentals.map((rental) => (
+                    <div
+                      key={rental.id}
+                      className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-200"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-5">
+                          <div className="w-20 h-28 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md">
+                            <span className="text-3xl">📚</span>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-xl text-gray-900 mb-2">
+                              {rental.title}
+                            </h3>
+                            <p className="text-gray-700 mb-3 text-lg">
+                              by {rental.author}
+                            </p>
+                            <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
+                              {rental.genre}
+                            </span>
+                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div className="flex items-center space-x-2">
+                                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                                <p className="text-sm text-gray-700">
+                                  <span className="font-semibold">Rented:</span>{" "}
+                                  {rental.rentedDate}
+                                </p>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
+                                <p className="text-sm text-gray-700">
+                                  <span className="font-semibold">Due:</span>{" "}
+                                  {rental.dueDate}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end space-y-4">
+                          <span
+                            className={`px-4 py-2 text-sm font-bold rounded-full shadow-sm ${
+                              rental.status === "active"
+                                ? rental.daysLeft !== undefined &&
+                                  rental.daysLeft <= 3
+                                  ? "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                                  : "bg-green-100 text-green-800 border border-green-200"
+                                : "bg-red-100 text-red-800 border border-red-200"
+                            }`}
+                          >
+                            {rental.status === "overdue" &&
+                            rental.daysLeft !== undefined
+                              ? `${Math.abs(rental.daysLeft)} days overdue`
+                              : rental.daysLeft !== undefined &&
+                                rental.daysLeft <= 3
+                              ? `${rental.daysLeft} days left`
+                              : "Active"}
+                          </span>
+                          <Button
+                            onClick={() =>
+                              router.push(`/books/${rental.bookId}`)
+                            }
+                            variant="outline"
+                            size="sm"
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16">
+                  <div className="text-8xl mb-6">📚</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                    No active rentals
+                  </h3>
+                  <p className="text-gray-600 mb-6 text-lg">
+                    Start exploring our amazing book collection!
+                  </p>
+                  <Button
+                    onClick={() => router.push("/books")}
+                    variant="primary"
+                    size="lg"
+                  >
+                    Browse Books
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Rental History */}
+          <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-gray-50 to-slate-50 p-6 border-b border-gray-200">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-lg">📖</span>
+                <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center">
+                  <span className="text-white text-lg">📜</span>
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  Active Rentals
+                  Rental History
                 </h2>
               </div>
-              <span className="bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-sm">
-                {activeRentals.length} {activeRentals.length === 1 ? 'book' : 'books'}
-              </span>
             </div>
-          </div>
-          <div className="p-6 bg-gray-50">
-            {activeRentals.length > 0 ? (
-              <div className="space-y-6">
-                {activeRentals.map((rental) => (
-                  <div
-                    key={rental.id}
-                    className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-blue-200"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-5">
-                        <div className="w-20 h-28 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md">
-                          <span className="text-3xl">📚</span>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-bold text-xl text-gray-900 mb-2">
-                            {rental.title}
-                          </h3>
-                          <p className="text-gray-700 mb-3 text-lg">
-                            by {rental.author}
-                          </p>
-                          <span className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">
-                            {rental.genre}
-                          </span>
-                          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div className="flex items-center space-x-2">
-                              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                              <p className="text-sm text-gray-700">
-                                <span className="font-semibold">Rented:</span>{" "}
-                                {rental.rentedDate}
-                              </p>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                              <p className="text-sm text-gray-700">
-                                <span className="font-semibold">Due:</span>{" "}
-                                {rental.dueDate}
-                              </p>
+            <div className="p-6 bg-gray-50">
+              {returnedRentals.length > 0 ? (
+                <div className="space-y-6">
+                  {returnedRentals.map((rental) => (
+                    <div
+                      key={rental.id}
+                      className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all duration-300"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start space-x-5">
+                          <div className="w-20 h-28 bg-gradient-to-br from-gray-300 to-gray-500 rounded-lg flex items-center justify-center shadow-md opacity-75">
+                            <span className="text-3xl">📚</span>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-bold text-xl text-gray-900 mb-2">
+                              {rental.title}
+                            </h3>
+                            <p className="text-gray-700 mb-3 text-lg">
+                              by {rental.author}
+                            </p>
+                            <span className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full font-medium">
+                              {rental.genre}
+                            </span>
+                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div className="flex items-center space-x-2">
+                                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                <p className="text-sm text-gray-700">
+                                  <span className="font-semibold">Rented:</span>{" "}
+                                  {rental.rentedDate}
+                                </p>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                                <p className="text-sm text-gray-700">
+                                  <span className="font-semibold">
+                                    Returned:
+                                  </span>{" "}
+                                  {rental.returnedDate}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex flex-col items-end space-y-4">
-                        <span
-                          className={`px-4 py-2 text-sm font-bold rounded-full shadow-sm ${
-                            rental.status === "active"
-                              ? rental.daysLeft !== undefined &&
-                                rental.daysLeft <= 3
-                                ? "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                                : "bg-green-100 text-green-800 border border-green-200"
-                              : "bg-red-100 text-red-800 border border-red-200"
-                          }`}
-                        >
-                          {rental.status === "overdue" &&
-                          rental.daysLeft !== undefined
-                            ? `${Math.abs(rental.daysLeft)} days overdue`
-                            : rental.daysLeft !== undefined &&
-                              rental.daysLeft <= 3
-                            ? `${rental.daysLeft} days left`
-                            : "Active"}
-                        </span>
-                        <Button
-                          onClick={() => router.push(`/books/${rental.bookId}`)}
-                          variant="outline"
-                          size="sm"
-                        >
-                          View Details
-                        </Button>
+                        <div className="flex flex-col items-end space-y-4">
+                          <span className="bg-green-100 text-green-800 px-4 py-2 text-sm font-bold rounded-full shadow-sm border border-green-200">
+                            Returned
+                          </span>
+                          <Button
+                            onClick={() =>
+                              router.push(`/books/${rental.bookId}`)
+                            }
+                            variant="outline"
+                            size="sm"
+                          >
+                            View Details
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <div className="text-8xl mb-6">📚</div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                  No active rentals
-                </h3>
-                <p className="text-gray-600 mb-6 text-lg">
-                  Start exploring our amazing book collection!
-                </p>
-                <Button onClick={() => router.push('/books')} variant="primary" size="lg">
-                  Browse Books
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Rental History */}
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-gray-50 to-slate-50 p-6 border-b border-gray-200">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-lg">📜</span>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900">Rental History</h2>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4 opacity-50">📜</div>
+                  <p className="text-gray-600 text-lg">No rental history yet</p>
+                </div>
+              )}
             </div>
           </div>
-          <div className="p-6 bg-gray-50">
-            {returnedRentals.length > 0 ? (
-              <div className="space-y-6">
-                {returnedRentals.map((rental) => (
-                  <div
-                    key={rental.id}
-                    className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-5">
-                        <div className="w-20 h-28 bg-gradient-to-br from-gray-300 to-gray-500 rounded-lg flex items-center justify-center shadow-md opacity-75">
-                          <span className="text-3xl">📚</span>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-bold text-xl text-gray-900 mb-2">
-                            {rental.title}
-                          </h3>
-                          <p className="text-gray-700 mb-3 text-lg">
-                            by {rental.author}
-                          </p>
-                          <span className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full font-medium">
-                            {rental.genre}
-                          </span>
-                          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div className="flex items-center space-x-2">
-                              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                              <p className="text-sm text-gray-700">
-                                <span className="font-semibold">Rented:</span>{" "}
-                                {rental.rentedDate}
-                              </p>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                              <p className="text-sm text-gray-700">
-                                <span className="font-semibold">Returned:</span>{" "}
-                                {rental.returnedDate}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end space-y-4">
-                        <span className="bg-green-100 text-green-800 px-4 py-2 text-sm font-bold rounded-full shadow-sm border border-green-200">
-                          Returned
-                        </span>
-                        <Button
-                          onClick={() => router.push(`/books/${rental.bookId}`)}
-                          variant="outline"
-                          size="sm"
-                        >
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4 opacity-50">📜</div>
-                <p className="text-gray-600 text-lg">No rental history yet</p>
-              </div>
-            )}
-          </div>
-        </div>
         </div>
       )}
     </DashboardLayout>

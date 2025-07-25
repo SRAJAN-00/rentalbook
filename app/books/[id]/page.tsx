@@ -150,12 +150,16 @@ export default function BookDetailsPage({
             <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-purple-400 rounded-full animate-ping delay-150"></div>
             <div className="absolute top-1/2 -right-4 w-2 h-2 bg-indigo-400 rounded-full animate-ping delay-300"></div>
           </div>
-          
+
           {/* Loading Text */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">Loading Book Details</h2>
-            <p className="text-gray-600 text-lg">Please wait while we fetch the information...</p>
-            
+            <h2 className="text-2xl font-bold text-gray-800">
+              Loading Book Details
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Please wait while we fetch the information...
+            </p>
+
             {/* Progress Dots */}
             <div className="flex justify-center space-x-2 mt-6">
               <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
@@ -163,7 +167,7 @@ export default function BookDetailsPage({
               <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce delay-200"></div>
             </div>
           </div>
-          
+
           {/* Loading Bar */}
           <div className="mt-8 w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
@@ -194,10 +198,14 @@ export default function BookDetailsPage({
               href="/books"
               className="flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200 group"
             >
-              <span className="mr-2 group-hover:-translate-x-1 transition-transform duration-200">←</span>
+              <span className="mr-2 group-hover:-translate-x-1 transition-transform duration-200">
+                ←
+              </span>
               Back to Library
             </Link>
-            <h1 className="text-lg font-semibold text-gray-900">Book Details</h1>
+            <h1 className="text-lg font-semibold text-gray-900">
+              Book Details
+            </h1>
             <div className="w-24"></div>
           </div>
         </div>
@@ -237,7 +245,9 @@ export default function BookDetailsPage({
                         : "bg-red-500/90 text-white border-red-400/30"
                     }`}
                   >
-                    {isAvailable ? `${book.availableCopies} Available` : "Not Available"}
+                    {isAvailable
+                      ? `${book.availableCopies} Available`
+                      : "Not Available"}
                   </div>
                 </div>
 
@@ -326,9 +336,9 @@ export default function BookDetailsPage({
                 {isAvailable && !isRented ? (
                   <>
                     <RentModal bookId={book._id} />
-                    <Button 
-                      href="/books" 
-                      variant="outline" 
+                    <Button
+                      href="/books"
+                      variant="outline"
                       size="md"
                       className="px-6 py-2 text-sm font-semibold rounded-xl border-2 hover:scale-105 transition-all duration-200"
                     >
@@ -353,9 +363,9 @@ export default function BookDetailsPage({
                         "Return Book"
                       )}
                     </Button>
-                    <Button 
-                      href="/dashboard/rentals" 
-                      variant="outline" 
+                    <Button
+                      href="/dashboard/rentals"
+                      variant="outline"
                       size="md"
                       className="px-6 py-2 text-sm font-semibold rounded-xl border-2 hover:scale-105 transition-all duration-200"
                     >
@@ -364,17 +374,17 @@ export default function BookDetailsPage({
                   </>
                 ) : (
                   <>
-                    <Button 
-                      disabled 
-                      variant="outline" 
+                    <Button
+                      disabled
+                      variant="outline"
                       size="md"
                       className="px-6 py-2 text-sm font-semibold rounded-xl border-2 opacity-50 cursor-not-allowed"
                     >
                       Currently Unavailable
                     </Button>
-                    <Button 
-                      href="/books" 
-                      variant="primary" 
+                    <Button
+                      href="/books"
+                      variant="primary"
                       size="md"
                       className="px-6 py-2 text-sm font-semibold rounded-xl hover:scale-105 transition-all duration-200"
                     >
@@ -398,15 +408,25 @@ export default function BookDetailsPage({
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span className="font-medium text-gray-700 text-sm">Genre</span>
-                  <span className="text-gray-900 font-medium text-sm">{book.genre}</span>
+                  <span className="font-medium text-gray-700 text-sm">
+                    Genre
+                  </span>
+                  <span className="text-gray-900 font-medium text-sm">
+                    {book.genre}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span className="font-medium text-gray-700 text-sm">Published</span>
-                  <span className="text-gray-900 font-medium text-sm">{book.publishedYear}</span>
+                  <span className="font-medium text-gray-700 text-sm">
+                    Published
+                  </span>
+                  <span className="text-gray-900 font-medium text-sm">
+                    {book.publishedYear}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span className="font-medium text-gray-700 text-sm">Status</span>
+                  <span className="font-medium text-gray-700 text-sm">
+                    Status
+                  </span>
                   <div className="flex items-center">
                     <div
                       className={`w-2 h-2 rounded-full mr-2 ${
@@ -430,19 +450,27 @@ export default function BookDetailsPage({
               <div className="space-y-2">
                 <div className="flex items-start space-x-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
-                  <p className="text-gray-700 text-sm">Standard rental period is 14 days</p>
+                  <p className="text-gray-700 text-sm">
+                    Standard rental period is 14 days
+                  </p>
                 </div>
                 <div className="flex items-start space-x-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
-                  <p className="text-gray-700 text-sm">Late returns may incur fees</p>
+                  <p className="text-gray-700 text-sm">
+                    Late returns may incur fees
+                  </p>
                 </div>
                 <div className="flex items-start space-x-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
-                  <p className="text-gray-700 text-sm">Books can be renewed if available</p>
+                  <p className="text-gray-700 text-sm">
+                    Books can be renewed if available
+                  </p>
                 </div>
                 <div className="flex items-start space-x-2">
                   <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
-                  <p className="text-gray-700 text-sm">Digital receipts sent via email</p>
+                  <p className="text-gray-700 text-sm">
+                    Digital receipts sent via email
+                  </p>
                 </div>
               </div>
             </div>

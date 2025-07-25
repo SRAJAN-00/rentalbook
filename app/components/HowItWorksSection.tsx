@@ -7,38 +7,42 @@ export function HowItWorksSection() {
     {
       step: "01",
       title: "Browse & Discover",
-      description: "Explore our vast collection of books across all genres. Use our smart search and filtering system to find exactly what you're looking for.",
+      description:
+        "Explore our vast collection of books across all genres. Use our smart search and filtering system to find exactly what you're looking for.",
       icon: "🔍",
-      color: "blue"
+      color: "blue",
     },
     {
-      step: "02", 
+      step: "02",
       title: "Rent Instantly",
-      description: "Found your next read? Click 'Rent Now' and the book is yours! Our streamlined process takes just seconds to complete.",
+      description:
+        "Found your next read? Click 'Rent Now' and the book is yours! Our streamlined process takes just seconds to complete.",
       icon: "⚡",
-      color: "green"
+      color: "green",
     },
     {
       step: "03",
       title: "Enjoy Reading",
-      description: "Dive into your book and enjoy! You'll have it for the full rental period with automatic reminders before it's due.",
+      description:
+        "Dive into your book and enjoy! You'll have it for the full rental period with automatic reminders before it's due.",
       icon: "📖",
-      color: "purple"
+      color: "purple",
     },
     {
       step: "04",
       title: "Return & Repeat",
-      description: "When you're done, simply return the book and discover your next adventure. Rate and review to help other readers!",
+      description:
+        "When you're done, simply return the book and discover your next adventure. Rate and review to help other readers!",
       icon: "🔄",
-      color: "orange"
-    }
+      color: "orange",
+    },
   ];
 
   const colorVariants = {
     blue: "from-blue-500 to-blue-600",
-    green: "from-green-500 to-green-600", 
+    green: "from-green-500 to-green-600",
     purple: "from-purple-500 to-purple-600",
-    orange: "from-orange-500 to-orange-600"
+    orange: "from-orange-500 to-orange-600",
   };
 
   return (
@@ -55,7 +59,8 @@ export function HowItWorksSection() {
             How It Works
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Getting started is simple. Follow these easy steps to begin your reading journey
+            Getting started is simple. Follow these easy steps to begin your
+            reading journey
           </p>
         </motion.div>
 
@@ -80,9 +85,13 @@ export function HowItWorksSection() {
                 {/* Step Number */}
                 <motion.div
                   whileHover={{ scale: 1.1 }}
-                  className={`w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r ${colorVariants[step.color as keyof typeof colorVariants]} flex items-center justify-center shadow-lg`}
+                  className={`w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r ${
+                    colorVariants[step.color as keyof typeof colorVariants]
+                  } flex items-center justify-center shadow-lg`}
                 >
-                  <span className="text-white font-bold text-lg">{step.step}</span>
+                  <span className="text-white font-bold text-lg">
+                    {step.step}
+                  </span>
                 </motion.div>
 
                 {/* Icon */}
@@ -94,8 +103,12 @@ export function HowItWorksSection() {
                   transition={{ duration: 0.2 }}
                   className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-100"
                 >
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {step.description}
+                  </p>
                 </motion.div>
               </div>
             </motion.div>
@@ -115,8 +128,8 @@ export function HowItWorksSection() {
               Ready to Start Your Reading Journey?
             </h3>
             <p className="text-gray-600 mb-6 text-lg">
-              Join thousands of readers who have discovered their love for books through our platform. 
-              It takes less than 2 minutes to get started!
+              Join thousands of readers who have discovered their love for books
+              through our platform. It takes less than 2 minutes to get started!
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-500">
               <div className="flex items-center">

@@ -60,12 +60,16 @@ export default function BooksPage() {
             <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-purple-400 rounded-full animate-ping delay-150"></div>
             <div className="absolute top-1/2 -right-4 w-2 h-2 bg-indigo-400 rounded-full animate-ping delay-300"></div>
           </div>
-          
+
           {/* Loading Text */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">Loading Library</h2>
-            <p className="text-gray-600 text-lg">Preparing your book collection...</p>
-            
+            <h2 className="text-2xl font-bold text-gray-800">
+              Loading Library
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Preparing your book collection...
+            </p>
+
             {/* Progress Dots */}
             <div className="flex justify-center space-x-2 mt-6">
               <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
@@ -73,7 +77,7 @@ export default function BooksPage() {
               <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce delay-200"></div>
             </div>
           </div>
-          
+
           {/* Loading Bar */}
           <div className="mt-8 w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
@@ -107,10 +111,12 @@ export default function BooksPage() {
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-400 rounded-full animate-ping"></div>
             </div>
-            
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Loading Books</h3>
+
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              Loading Books
+            </h3>
             <p className="text-gray-600">Fetching the latest collection...</p>
-            
+
             {/* Mini Progress Dots */}
             <div className="flex justify-center space-x-1 mt-4">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>

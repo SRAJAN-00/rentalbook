@@ -5,7 +5,7 @@ export function Hero() {
   return (
     <div>
       <Navbar />
-      <div className=" text-gray-900 h-screen  text-center py-16">
+      <div className="text-gray-900 h-[100vh] text-center py-16 flex flex-col justify-center">
         <div>
           <div className=" mt-10">
             <span className="  px-3 py-2 text-neutral-800 shadow-md text-xs rounded-full  bg-neutral-50 inline-flex items-center gap-2">

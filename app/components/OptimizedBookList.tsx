@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import BookCard from "./BookCard";
 import Button from "./ModernButton";
 import BookFilterSort from "./BookFilterSort";
@@ -34,6 +34,17 @@ export default function OptimizedBookList({
   const [genreFilter, setGenreFilter] = useState("");
   const [availabilityFilter, setAvailabilityFilter] = useState("");
   const [sortBy, setSortBy] = useState("title");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  // Debounce search term for better performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Only refresh data when needed (not on initial load)
   const refreshBooks = async () => {
@@ -86,45 +97,114 @@ export default function OptimizedBookList({
     }
   };
 
-  // Get unique genres for filter dropdown
-  const availableGenres = [...new Set(books.map((book) => book.genre))]
-    .filter(Boolean)
-    .sort();
+  // Get unique genres for filter dropdown (memoized)
+  const availableGenres = useMemo(
+    () => [...new Set(books.map((book) => book.genre))].filter(Boolean).sort(),
+    [books]
+  );
 
-  // Filter and sort books
-  const filteredAndSortedBooks = books
-    .filter((book) => {
-      const matchesGenre = !genreFilter || book.genre === genreFilter;
-      const matchesAvailability =
-        !availabilityFilter ||
-        (availabilityFilter === "available" && book.availableCopies > 0) ||
-        (availabilityFilter === "unavailable" && book.availableCopies === 0);
+  // Filter and sort books (memoized for performance)
+  const filteredAndSortedBooks = useMemo(() => {
+    return books
+      .filter((book) => {
+        // Search filter
+        const matchesSearch =
+          !debouncedSearchTerm ||
+          book.title
+            .toLowerCase()
+            .includes(debouncedSearchTerm.toLowerCase()) ||
+          book.author
+            .toLowerCase()
+            .includes(debouncedSearchTerm.toLowerCase()) ||
+          book.genre.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
 
-      return matchesGenre && matchesAvailability;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "title":
-          return a.title.localeCompare(b.title);
-        case "author":
-          return a.author.localeCompare(b.author);
-        case "year":
-          return b.publishedYear - a.publishedYear;
-        case "availability":
-          return b.availableCopies - a.availableCopies;
-        default:
-          return 0;
-      }
-    });
+        const matchesGenre = !genreFilter || book.genre === genreFilter;
+        const matchesAvailability =
+          !availabilityFilter ||
+          (availabilityFilter === "available" && book.availableCopies > 0) ||
+          (availabilityFilter === "unavailable" && book.availableCopies === 0);
 
-  const clearFilters = () => {
+        return matchesSearch && matchesGenre && matchesAvailability;
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case "title":
+            return a.title.localeCompare(b.title);
+          case "author":
+            return a.author.localeCompare(b.author);
+          case "year":
+            return b.publishedYear - a.publishedYear;
+          case "availability":
+            return b.availableCopies - a.availableCopies;
+          default:
+            return 0;
+        }
+      });
+  }, [books, genreFilter, availabilityFilter, sortBy, debouncedSearchTerm]);
+
+  // Memoized event handlers
+  const handleRentCallback = useCallback((bookId: string) => {
+    setSelectedBookId(bookId);
+    setShowRentModal(true);
+  }, []);
+
+  const clearFilters = useCallback(() => {
     setGenreFilter("");
     setAvailabilityFilter("");
     setSortBy("title");
-  };
+    setSearchTerm("");
+  }, []);
 
   return (
     <div>
+      {/* Search Input */}
+      <div className="mb-6">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg
+              className="h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Search books by title, author, or genre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <svg
+                className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* Filter and Sort Controls */}
       <BookFilterSort
         genres={availableGenres}
@@ -136,15 +216,25 @@ export default function OptimizedBookList({
         onSortChange={setSortBy}
         onClearFilters={clearFilters}
         hasActiveFilters={
-          genreFilter !== "" || availabilityFilter !== "" || sortBy !== "title"
+          genreFilter !== "" ||
+          availabilityFilter !== "" ||
+          sortBy !== "title" ||
+          searchTerm !== ""
         }
       />
 
       {/* Results Count */}
       <div className="mb-6 flex items-center justify-between">
-        <p className="text-sm text-gray-600">
-          Showing {filteredAndSortedBooks.length} of {books.length} books
-        </p>
+        <div className="text-sm text-gray-600">
+          <p>
+            Showing {filteredAndSortedBooks.length} of {books.length} books
+          </p>
+          {debouncedSearchTerm && (
+            <p className="text-blue-600 mt-1">
+              Search results for: "{debouncedSearchTerm}"
+            </p>
+          )}
+        </div>
         {loading && (
           <div className="flex items-center text-sm text-gray-500">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
@@ -177,9 +267,9 @@ export default function OptimizedBookList({
           <p className="text-gray-600 mb-6">No books available.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredAndSortedBooks.map((book) => (
-            <BookCard key={book._id} book={book} onRent={handleRent} />
+            <BookCard key={book._id} book={book} onRent={handleRentCallback} />
           ))}
         </div>
       )}
