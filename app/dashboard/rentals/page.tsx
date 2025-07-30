@@ -8,46 +8,44 @@ export default function RentalsPage() {
   const [rentals, setRentals] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const fetchRentals = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/user/rentals");
+      const data = await response.json();
+
+      if (data.success) {
+        // Format rental data for the UI
+        const formattedRentals = data.data.map((rental: any) => ({
+          id: rental._id,
+          bookId: rental.bookId?._id || rental.bookId, // Add the actual book ID
+          title: rental.bookId?.title || "Unknown Title",
+          author: rental.bookId?.author || "Unknown Author",
+          genre: rental.bookId?.genre || "Unknown Genre",
+          rentedDate: new Date(rental.rentDate).toLocaleDateString(),
+          dueDate: new Date(rental.dueDate).toLocaleDateString(),
+          status: rental.status,
+          returnedDate: rental.returnDate
+            ? new Date(rental.returnDate).toLocaleDateString()
+            : undefined,
+          daysLeft:
+            rental.status === "active"
+              ? Math.ceil(
+                  (new Date(rental.dueDate).getTime() - new Date().getTime()) /
+                    (1000 * 60 * 60 * 24)
+                )
+              : undefined,
+        }));
+        setRentals(formattedRentals);
+      }
+    } catch (error) {
+      console.error("Error fetching rentals:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchRentals = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("/api/user/rentals");
-        const data = await response.json();
-
-        if (data.success) {
-          // Format rental data for the UI
-          const formattedRentals = data.data.map((rental: any) => ({
-            id: rental._id,
-            bookId: rental.bookId?._id || rental.bookId, // Add the actual book ID
-            title: rental.bookId?.title || "Unknown Title",
-            author: rental.bookId?.author || "Unknown Author",
-            genre: rental.bookId?.genre || "Unknown Genre",
-            rentedDate: new Date(rental.rentDate).toLocaleDateString(),
-            dueDate: new Date(rental.dueDate).toLocaleDateString(),
-            status: rental.status,
-            returnedDate: rental.returnDate
-              ? new Date(rental.returnDate).toLocaleDateString()
-              : undefined,
-            daysLeft:
-              rental.status === "active"
-                ? Math.ceil(
-                    (new Date(rental.dueDate).getTime() -
-                      new Date().getTime()) /
-                      (1000 * 60 * 60 * 24)
-                  )
-                : undefined,
-          }));
-          setRentals(formattedRentals);
-        }
-      } catch (error) {
-        console.error("Error fetching rentals:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchRentals();
   }, []);
   const activeRentals = rentals.filter(
