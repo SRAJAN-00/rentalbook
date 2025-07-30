@@ -1,3 +1,4 @@
+import Fav from "./fav";
 import Button from "./ModernButton";
 import Link from "next/link";
 
@@ -21,6 +22,9 @@ interface BookCardProps {
 export default function BookCard({ book, onRent }: BookCardProps) {
   const isAvailable = book.availableCopies > 0;
 
+  if (!book._id) {
+    console.warn("BookCard: book._id is missing! Book object:", book);
+  }
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-200 transform hover:-translate-y-0.5 border h-70 flex flex-col cursor-pointer">
       <div className="h-40 relative rounded-lg flex-shrink-0">
@@ -46,7 +50,7 @@ export default function BookCard({ book, onRent }: BookCardProps) {
           {isAvailable ? `${book.availableCopies}` : "0"}
         </div>
       </div>
-
+      <Fav bookId={book._id} />
       <div className="p-3 flex-grow flex flex-col">
         <h3 className="font-bold text-sm mb-1 text-gray-900 line-clamp-1 leading-tight">
           {book.title}
