@@ -20,19 +20,19 @@ const Fav = ({ bookId, isFavorite, onToggle }: FavProps) => {
       onClick={handleFavClick}
       aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       className={`
-        group relative p-2 rounded-full transition-all duration-200 
+        group relative top-[-4px] rounded-full transition-all duration-200 
         ${
           isFavorite
-            ? "bg-white/80 hover:bg-white hover:shadow-xl"
-            : "bg-white/60 hover:bg-white/90 hover:shadow-lg"
+            ? " hover:bg-white hover:shadow-xl"
+            : " hover:bg-white/90  hover:shadow-lg"
         }
-        backdrop-blur-sm border border-white/30
+         
         transform hover:scale-110 active:scale-95
       `}
     >
       <div className="relative">
         {isFavorite ? (
-          <div className="text-xl animate-pulse">❤️</div>
+          <div className="text-xl ">❤️</div>
         ) : (
           <div className="text-xl group-hover:scale-110 transition-transform duration-200">
             🤍
@@ -40,9 +40,7 @@ const Fav = ({ bookId, isFavorite, onToggle }: FavProps) => {
         )}
 
         {/* Subtle glow effect for favorited items */}
-        {isFavorite && (
-          <div className="absolute inset-0 rounded-full bg-red-200/20 animate-ping"></div>
-        )}
+        {isFavorite && <div className="absolute inset-0  "></div>}
       </div>
     </button>
   );
