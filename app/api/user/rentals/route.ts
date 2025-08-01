@@ -31,7 +31,7 @@ export async function GET() {
       );
     }
     const rentals = await Rental.find({ renterEmail: userEmail })
-      .populate("bookId", "title author")
+      .populate("bookId", "title author genre imageUrl")
       .sort({ createdAt: -1 });
 
     return NextResponse.json({

@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import BookCard from "./BookCard";
 import Button from "./ModernButton";
 import BookFilterSort from "./BookFilterSort";
+import { useFavorites } from "../hooks/useFavorites";
+import { useRental } from "../hooks/useRental";
 
 interface Book {
   _id: string;
@@ -24,13 +26,30 @@ interface OptimizedBookListProps {
 export default function OptimizedBookList({
   initialBooks,
 }: OptimizedBookListProps) {
+  // Use the custom favorites hook
+  const { favoriteIds, isLoadingFavorites, handleToggleFavorite } =
+    useFavorites();
+
+  // Use the custom rental hook
+  const {
+    renterName,
+    setRenterName,
+    renterEmail,
+    setRenterEmail,
+    showRentModal,
+    isRenting,
+    handleRent,
+    handleRentSubmit,
+    closeRentModal,
+  } = useRental({
+    onRentalSuccess: () => {
+      refreshBooks(); // Refresh books after successful rental
+    },
+  });
+
   const [books, setBooks] = useState<Book[]>(initialBooks); // ← Start with server data
   const [loading, setLoading] = useState(false); // ← No initial loading!
   const [error, setError] = useState("");
-  const [showRentModal, setShowRentModal] = useState(false);
-  const [selectedBookId, setSelectedBookId] = useState("");
-  const [renterName, setRenterName] = useState("");
-  const [renterEmail, setRenterEmail] = useState("");
   const [genreFilter, setGenreFilter] = useState("");
   const [availabilityFilter, setAvailabilityFilter] = useState("");
   const [sortBy, setSortBy] = useState("title");
@@ -59,41 +78,6 @@ export default function OptimizedBookList({
       setError("Error refreshing books");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleRent = (bookId: string) => {
-    setSelectedBookId(bookId);
-    setShowRentModal(true);
-  };
-
-  const submitRental = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch("/api/rentals", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          bookId: selectedBookId,
-          renterName,
-          renterEmail,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        alert("Book rented successfully!");
-        setShowRentModal(false);
-        setRenterName("");
-        setRenterEmail("");
-        refreshBooks(); // ← Only refresh after rental
-      } else {
-        alert(result.error || "Failed to rent book");
-      }
-    } catch (error) {
-      alert("Error renting book");
     }
   };
 
@@ -143,10 +127,12 @@ export default function OptimizedBookList({
   }, [books, genreFilter, availabilityFilter, sortBy, debouncedSearchTerm]);
 
   // Memoized event handlers
-  const handleRentCallback = useCallback((bookId: string) => {
-    setSelectedBookId(bookId);
-    setShowRentModal(true);
-  }, []);
+  const handleRentCallback = useCallback(
+    (bookId: string) => {
+      handleRent(bookId);
+    },
+    [handleRent]
+  );
 
   const clearFilters = useCallback(() => {
     setGenreFilter("");
@@ -260,16 +246,45 @@ export default function OptimizedBookList({
       {/* Books Grid */}
       {books.length === 0 ? (
         <div className="text-center py-16">
-          <div className="text-6xl mb-6">�</div>
+          <div className="text-6xl mb-6">📚</div>
           <h3 className="text-2xl font-semibold text-gray-900 mb-4">
             No Books Available
           </h3>
           <p className="text-gray-600 mb-6">No books available.</p>
         </div>
+      ) : isLoadingFavorites ? (
+        // Show loading skeleton while favorites are being fetched
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredAndSortedBooks.map((book) => (
+            <div
+              key={book._id}
+              className="bg-white rounded-lg shadow-md overflow-hidden border h-70 flex flex-col"
+            >
+              {/* Image skeleton */}
+              <div className="h-40 bg-gray-200 animate-pulse" />
+              {/* Heart skeleton */}
+              <div className="p-2">
+                <div className="w-6 h-6 bg-gray-200 rounded animate-pulse" />
+              </div>
+              {/* Content skeleton */}
+              <div className="p-3 flex-grow">
+                <div className="h-4 bg-gray-200 rounded animate-pulse mb-2" />
+                <div className="h-3 bg-gray-200 rounded animate-pulse mb-2 w-3/4" />
+                <div className="h-3 bg-gray-200 rounded animate-pulse w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredAndSortedBooks.map((book) => (
-            <BookCard key={book._id} book={book} onRent={handleRentCallback} />
+            <BookCard
+              key={book._id}
+              book={book}
+              onRent={handleRentCallback}
+              isFavorite={favoriteIds.includes(book._id)}
+              onToggleFavorite={handleToggleFavorite}
+            />
           ))}
         </div>
       )}
@@ -282,7 +297,7 @@ export default function OptimizedBookList({
               Rent This Book
             </h3>
 
-            <form onSubmit={submitRental} className="space-y-4">
+            <form onSubmit={handleRentSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Your Name
@@ -312,14 +327,20 @@ export default function OptimizedBookList({
               </div>
 
               <div className="flex gap-3 pt-4">
-                <Button type="submit" variant="primary" className="flex-1">
-                  Rent Book
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="flex-1"
+                  disabled={isRenting}
+                >
+                  {isRenting ? "Renting..." : "Rent Book"}
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => setShowRentModal(false)}
+                  onClick={closeRentModal}
                   variant="outline"
                   className="flex-1"
+                  disabled={isRenting}
                 >
                   Cancel
                 </Button>

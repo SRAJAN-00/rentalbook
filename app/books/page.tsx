@@ -22,18 +22,26 @@ export default function BooksPage() {
 
   // Fetch books on client side
   useEffect(() => {
-    async function fetchBooks() {
+    async function fetchBooksData() {
       if (session) {
         try {
-          const response = await fetch("/api/books");
-          if (response.ok) {
-            const result = await response.json();
-            if (result.success) {
-              setInitialBooks(result.data);
+          // Use Promise.all to fetch books and favorites simultaneously for better performance
+          const [booksResponse, favoritesResponse] = await Promise.all([
+            fetch("/api/books"),
+            fetch("/api/fav"),
+          ]);
+
+          if (booksResponse.ok) {
+            const booksResult = await booksResponse.json();
+            if (booksResult.success) {
+              setInitialBooks(booksResult.data);
             }
           }
+
+          // The favorites data will be handled by the useFavorites hook,
+          // but this parallel fetch helps warm up the cache
         } catch (error) {
-          console.error("Error fetching books:", error);
+          console.error("Error fetching books data:", error);
         } finally {
           setLoading(false);
         }
@@ -41,7 +49,7 @@ export default function BooksPage() {
     }
 
     if (status === "authenticated") {
-      fetchBooks();
+      fetchBooksData();
     }
   }, [session, status]);
 

@@ -1,66 +1,49 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-const Fav = ({ bookId }: { bookId?: string }) => {
-  const [fav, setIsFav] = useState(false);
-  const hasFetched = useRef(false); // Prevents multiple fetches
+interface FavProps {
+  bookId?: string;
+  isFavorite: boolean;
+  onToggle: (bookId: string, isFav: boolean) => void;
+}
 
-  useEffect(() => {
-    if (!bookId || hasFetched.current) return;
-
-    const checkFavorite = async () => {
-      try {
-        const res = await fetch("/api/fav");
-        const data = await res.json();
-
-        if (res.ok && Array.isArray(data.data)) {
-          const found = data.data.some(
-            (fav: any) => fav.bookId?._id === bookId || fav.bookId === bookId
-          );
-          setIsFav(found);
-        }
-      } catch (err) {
-        console.error("Error checking favorites", err);
-      } finally {
-        hasFetched.current = true; // Mark that fetch has happened
-      }
-    };
-
-    checkFavorite();
-  }, [bookId]);
-
-  const handleFavClick = async () => {
+const Fav = ({ bookId, isFavorite, onToggle }: FavProps) => {
+  const handleFavClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!bookId) return;
-
-    try {
-      const url = "/api/fav";
-      const options = {
-        method: fav ? "DELETE" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookId }),
-      };
-
-      const res = await fetch(url, options);
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(`Error: ${data.error || res.status}`);
-        return;
-      }
-
-      setIsFav(!fav);
-    } catch (err) {
-      console.error("Error toggling favorite", err);
-    }
+    onToggle(bookId, isFavorite);
   };
 
   return (
     <button
       onClick={handleFavClick}
-      aria-label={fav ? "Remove from favorites" : "Add to favorites"}
-      style={{ background: "none", border: "none", cursor: "pointer" }}
+      aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+      className={`
+        group relative p-2 rounded-full transition-all duration-200 
+        ${
+          isFavorite
+            ? "bg-white/90 shadow-lg hover:bg-white hover:shadow-xl"
+            : "bg-white/70 hover:bg-white/90 shadow-md hover:shadow-lg"
+        }
+        backdrop-blur-sm border border-white/20
+        transform hover:scale-110 active:scale-95
+      `}
     >
-      {fav ? "❤️" : "🤍"}
+      <div className="relative">
+        {isFavorite ? (
+          <div className="text-xl animate-pulse">❤️</div>
+        ) : (
+          <div className="text-xl group-hover:scale-110 transition-transform duration-200">
+            🤍
+          </div>
+        )}
+
+        {/* Subtle glow effect for favorited items */}
+        {isFavorite && (
+          <div className="absolute inset-0 rounded-full bg-red-200 opacity-30 animate-ping"></div>
+        )}
+      </div>
     </button>
   );
 };

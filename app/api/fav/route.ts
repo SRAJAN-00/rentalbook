@@ -5,24 +5,40 @@ import Fav from "@/models/Fav";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 async function getUserIdFromSession(session: any) {
-  if (session?.user?.id) return session.user.id;
-  if (session?.user?.email) {
-    const user = await User.findOne({ email: session.user.email });
-    if (user) return user._id;
+  console.log("getUserIdFromSession - session:", session); // Debug log
+  if (session?.user?.id) {
+    console.log(
+      "getUserIdFromSession - found session.user.id:",
+      session.user.id
+    ); // Debug log
+    return session.user.id;
   }
+  if (session?.user?.email) {
+    console.log(
+      "getUserIdFromSession - looking up user by email:",
+      session.user.email
+    ); // Debug log
+    const user = await User.findOne({ email: session.user.email });
+    if (user) {
+      console.log("getUserIdFromSession - found user by email:", user._id); // Debug log
+      return user._id;
+    }
+  }
+  console.log("getUserIdFromSession - no valid user found"); // Debug log
   return null;
 }
 
-export default getUserIdFromSession;
+// Removed stray export default for getUserIdFromSession; only export as named
 
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
     // Get current user session
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     const userId = await getUserIdFromSession(session);
     if (!userId) {
       return NextResponse.json(
@@ -82,7 +98,7 @@ export async function DELETE(request: NextRequest) {
     await connectDB();
 
     // Get current user session
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     const userId = await getUserIdFromSession(session);
     if (!userId) {
       return NextResponse.json(
@@ -121,25 +137,50 @@ export async function DELETE(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await connectDB();
-    // Get current user session
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
+    console.log("GET /api/fav - Session:", session); // Debug log
+
     const userId = await getUserIdFromSession(session);
+    console.log("GET /api/fav - UserId:", userId); // Debug log
+
     if (!userId) {
-      return NextResponse.json(
-        { success: false, error: "User not found or not logged in" },
-        { status: 401 }
+      console.log(
+        "GET /api/fav - No userId, returning empty array instead of 401"
+      ); // Debug log
+      return NextResponse.json({
+        success: true,
+        data: [], // Return empty array instead of error
+      });
+    }
+
+    // Get only the current user's favorites
+    console.log("About to query Fav.find with userId:", userId); // Debug log
+    const favorites = await Fav.find({ userId })
+      .populate("bookId", "title author imageUrl")
+      .sort({ createdAt: -1 });
+
+    console.log(
+      "GET /api/fav - Found favorites:",
+      favorites.length,
+      "for user:",
+      userId
+    ); // Debug log
+
+    // Double-check: if we got a lot of favorites, something might be wrong
+    if (favorites.length > 20) {
+      console.warn(
+        "WARNING: Found unusually high number of favorites for single user:",
+        favorites.length
       );
     }
 
-    // Get user's favorite books
-    const favorites = await Fav.find({ userId: userId }).populate("bookId");
-    return NextResponse.json(
-      { success: true, data: favorites },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      success: true,
+      data: favorites,
+    });
   } catch (error) {
     console.error("Error fetching favorites:", error);
     return NextResponse.json(

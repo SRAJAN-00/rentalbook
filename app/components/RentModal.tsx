@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRental } from "../hooks/useRental";
 import Button from "./ModernButton";
 
 interface RentModalProps {
@@ -8,14 +8,38 @@ interface RentModalProps {
 }
 
 export default function RentModal({ bookId }: RentModalProps) {
-  const [showModal, setShowModal] = useState(false);
-  const [renterName, setRenterName] = useState("");
-  const [renterEmail, setRenterEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const {
+    renterName,
+    setRenterName,
+    renterEmail,
+    setRenterEmail,
+    showRentModal,
+    setShowRentModal,
+    isRenting,
+    handleRentSubmit,
+    closeRentModal,
+  } = useRental({
+    onRentalSuccess: () => {
+      // Refresh the page to update availability
+      window.location.reload();
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Set the book ID when the modal is opened
+  const handleOpenModal = () => {
+    setShowRentModal(true);
+    // We need to set the selected book ID in the hook
+    // For now, we'll handle this by passing it to the submit function
+  };
+
+  // Custom submit handler that includes the bookId
+  const handleSubmitWithBookId = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+
+    if (!bookId || !renterName || !renterEmail) {
+      alert("Please fill in all fields");
+      return;
+    }
 
     try {
       const response = await fetch("/api/rentals", {
@@ -32,9 +56,7 @@ export default function RentModal({ bookId }: RentModalProps) {
 
       if (result.success) {
         alert("Book rented successfully!");
-        setShowModal(false);
-        setRenterName("");
-        setRenterEmail("");
+        closeRentModal();
         // Refresh the page to update availability
         window.location.reload();
       } else {
@@ -42,29 +64,27 @@ export default function RentModal({ bookId }: RentModalProps) {
       }
     } catch (error) {
       alert("Error renting book");
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <>
       <Button
-        onClick={() => setShowModal(true)}
+        onClick={handleOpenModal}
         variant="primary"
         className="px-8 font-semibold"
       >
         📚 Rent This Book
       </Button>
 
-      {showModal && (
+      {showRentModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h3 className="text-xl font-bold text-gray-900 mb-4">
               Rent This Book
             </h3>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmitWithBookId} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Your Name
@@ -74,7 +94,7 @@ export default function RentModal({ bookId }: RentModalProps) {
                   value={renterName}
                   onChange={(e) => setRenterName(e.target.value)}
                   required
-                  disabled={loading}
+                  disabled={isRenting}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                   placeholder="Enter your name"
                 />
@@ -89,7 +109,7 @@ export default function RentModal({ bookId }: RentModalProps) {
                   value={renterEmail}
                   onChange={(e) => setRenterEmail(e.target.value)}
                   required
-                  disabled={loading}
+                  disabled={isRenting}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                   placeholder="Enter your email"
                 />
@@ -100,16 +120,16 @@ export default function RentModal({ bookId }: RentModalProps) {
                   type="submit"
                   variant="primary"
                   className="flex-1"
-                  disabled={loading}
+                  disabled={isRenting}
                 >
-                  {loading ? "Renting..." : "Rent Book"}
+                  {isRenting ? "Renting..." : "Rent Book"}
                 </Button>
                 <Button
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={closeRentModal}
                   variant="outline"
                   className="flex-1"
-                  disabled={loading}
+                  disabled={isRenting}
                 >
                   Cancel
                 </Button>

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "../../components/DashboardLayout";
 import Button from "../../components/ModernButton";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function RentalsPage() {
   const [rentals, setRentals] = useState<any[]>([]);
@@ -18,7 +20,10 @@ export default function RentalsPage() {
         // Format rental data for the UI
         const formattedRentals = data.data.map((rental: any) => ({
           id: rental._id,
-          bookId: rental.bookId?._id || rental.bookId, // Add the actual book ID
+          bookId: {
+            _id: rental.bookId?._id || rental.bookId,
+            imageUrl: rental.bookId?.imageUrl,
+          },
           title: rental.bookId?.title || "Unknown Title",
           author: rental.bookId?.author || "Unknown Author",
           genre: rental.bookId?.genre || "Unknown Genre",
@@ -36,6 +41,7 @@ export default function RentalsPage() {
                 )
               : undefined,
         }));
+
         setRentals(formattedRentals);
       }
     } catch (error) {
@@ -90,8 +96,18 @@ export default function RentalsPage() {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-5">
-                          <div className="w-20 h-28 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md">
-                            <span className="text-3xl">📚</span>
+                          <div className="w-20 h-28 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md overflow-hidden">
+                            {rental.bookId?.imageUrl ? (
+                              <Image
+                                src={rental.bookId.imageUrl}
+                                alt={rental.title}
+                                width={80}
+                                height={112}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span className="text-3xl">📚</span>
+                            )}
                           </div>
                           <div className="flex-1">
                             <h3 className="font-bold text-xl text-gray-900 mb-2">
@@ -140,15 +156,11 @@ export default function RentalsPage() {
                               ? `${rental.daysLeft} days left`
                               : "Active"}
                           </span>
-                          <Button
-                            onClick={() =>
-                              router.push(`/books/${rental.bookId}`)
-                            }
-                            variant="outline"
-                            size="sm"
-                          >
-                            View Details
-                          </Button>
+                          <Link href={`/books/${rental.bookId._id}`}>
+                            <Button variant="outline" size="sm">
+                              View Details
+                            </Button>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -197,8 +209,18 @@ export default function RentalsPage() {
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-start space-x-5">
-                          <div className="w-20 h-28 bg-gradient-to-br from-gray-300 to-gray-500 rounded-lg flex items-center justify-center shadow-md opacity-75">
-                            <span className="text-3xl">📚</span>
+                          <div className="w-20 h-28 bg-gradient-to-br from-gray-300 to-gray-500 rounded-lg flex items-center justify-center shadow-md opacity-75 overflow-hidden">
+                            {rental.bookId?.imageUrl ? (
+                              <Image
+                                src={rental.bookId.imageUrl}
+                                alt={rental.title}
+                                width={80}
+                                height={112}
+                                className="w-full h-full object-cover opacity-75"
+                              />
+                            ) : (
+                              <span className="text-3xl">📚</span>
+                            )}
                           </div>
                           <div className="flex-1">
                             <h3 className="font-bold text-xl text-gray-900 mb-2">
@@ -236,7 +258,7 @@ export default function RentalsPage() {
                           </span>
                           <Button
                             onClick={() =>
-                              router.push(`/books/${rental.bookId}`)
+                              router.push(`/books/${rental.bookId._id}`)
                             }
                             variant="outline"
                             size="sm"

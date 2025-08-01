@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+
 export interface IFav extends Document {
   userId: mongoose.Types.ObjectId;
   bookId: mongoose.Types.ObjectId;
@@ -21,6 +22,7 @@ const favSchema = new Schema<IFav>({
   updatedAt: { type: Date, default: Date.now },
 });
 
-const Fav = mongoose.model<IFav>("Fav", favSchema);
+// Check if model already exists to prevent OverwriteModelError
+const Fav = mongoose.models.Fav || mongoose.model<IFav>("Fav", favSchema);
 
 export default Fav;

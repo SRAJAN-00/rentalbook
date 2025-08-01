@@ -158,7 +158,7 @@ export default function DashboardContent() {
                     {recentBooks.map((book, idx) => (
                       <motion.div
                         {...enterAnimation(0.1 + idx * 0.1)}
-                        key={`${book.id || ''}_${book.bookId || ''}_${idx}`}
+                        key={book.id || idx}
                         className="flex items-center space-x-4 h-20 p-4 bg-gray-50 rounded-lg"
                         whileHover={{
                           scale: 1.02,
