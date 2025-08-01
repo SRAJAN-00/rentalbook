@@ -23,10 +23,10 @@ const Fav = ({ bookId, isFavorite, onToggle }: FavProps) => {
         group relative p-2 rounded-full transition-all duration-200 
         ${
           isFavorite
-            ? "bg-white/90 shadow-lg hover:bg-white hover:shadow-xl"
-            : "bg-white/70 hover:bg-white/90 shadow-md hover:shadow-lg"
+            ? "bg-white/80 hover:bg-white hover:shadow-xl"
+            : "bg-white/60 hover:bg-white/90 hover:shadow-lg"
         }
-        backdrop-blur-sm border border-white/20
+        backdrop-blur-sm border border-white/30
         transform hover:scale-110 active:scale-95
       `}
     >
@@ -41,7 +41,7 @@ const Fav = ({ bookId, isFavorite, onToggle }: FavProps) => {
 
         {/* Subtle glow effect for favorited items */}
         {isFavorite && (
-          <div className="absolute inset-0 rounded-full bg-red-200 opacity-30 animate-ping"></div>
+          <div className="absolute inset-0 rounded-full bg-red-200/20 animate-ping"></div>
         )}
       </div>
     </button>

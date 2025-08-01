@@ -119,7 +119,7 @@ export default function BookCard({
                   size="sm"
                   className="text-xs font-bold px-4 py-2 rounded-lg transform hover:scale-105 transition-all duration-200 shadow-md hover:shadow-lg w-full sm:w-auto"
                 >
-                  📚 Rent Now
+                  View Details
                 </Button>
               </Link>
             ) : (
