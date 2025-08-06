@@ -9,13 +9,8 @@ import { authOptions } from "../auth/[...nextauth]/route";
 
 async function getUserIdFromSession(session: any) {
   console.log("getUserIdFromSession - session:", session); // Debug log
-  if (session?.user?.id) {
-    console.log(
-      "getUserIdFromSession - found session.user.id:",
-      session.user.id
-    ); // Debug log
-    return session.user.id;
-  }
+
+  // Always look up user by email to get the proper MongoDB ObjectId
   if (session?.user?.email) {
     console.log(
       "getUserIdFromSession - looking up user by email:",
@@ -24,7 +19,7 @@ async function getUserIdFromSession(session: any) {
     const user = await User.findOne({ email: session.user.email });
     if (user) {
       console.log("getUserIdFromSession - found user by email:", user._id); // Debug log
-      return user._id;
+      return user._id; // This returns the proper MongoDB ObjectId
     }
   }
   console.log("getUserIdFromSession - no valid user found"); // Debug log

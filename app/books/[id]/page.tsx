@@ -9,6 +9,7 @@ import Button from "../../components/ModernButton";
 import RentModal from "@/app/components/RentModal";
 import { useRental } from "../../hooks/useRental";
 import { useBookDetails } from "../../hooks/useBookDetails";
+import { useRecent } from "../../hooks/useRecent";
 import DashboardLayout from "@/app/components/DashboardLayout";
 
 export default function BookDetailsPage({
@@ -46,6 +47,16 @@ export default function BookDetailsPage({
       await updateRentalStatus(false);
     },
   });
+
+  // Use recent activity hook for tracking book views
+  const { trackBookView } = useRecent();
+
+  // Track book view when page loads
+  useEffect(() => {
+    if (bookId && isAuthenticated) {
+      trackBookView(bookId);
+    }
+  }, [bookId, isAuthenticated, trackBookView]);
 
   // Show loading while checking authentication or fetching data
   if (loading) {
