@@ -8,6 +8,19 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function DashboardContent() {
+  // Animation helper function
+  function enterAnimation(
+    delay: number = 0.3,
+    x: number = 0,
+    duration: number = 0.4
+  ) {
+    return {
+      initial: { opacity: 0, x: -10 },
+      animate: { opacity: 1, x: 0 },
+      transition: { delay, duration },
+    };
+  }
+
   const [recentBooks, setRecentBooks] = useState<any[]>([]);
   const [recentActivities, setRecentActivities] = useState<any[]>([]);
   const [isLoadingRentals, setIsLoadingRentals] = useState(true);
@@ -108,17 +121,6 @@ export default function DashboardContent() {
 
     fetchData();
   }, [fetchRecentActivities]);
-  function enterAnimation(
-    delay: number = 0.3,
-    x: number = 0,
-    duration: number = 0.4
-  ) {
-    return {
-      initial: { opacity: 0, x: -10 },
-      animate: { opacity: 1, x: 0 },
-      transition: { delay, duration },
-    };
-  }
 
   return (
     <div className="space-y-8">

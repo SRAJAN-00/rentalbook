@@ -5,9 +5,10 @@ import Button from "./ModernButton";
 
 interface RentModalProps {
   bookId: string;
+  onModalStateChange?: (isOpen: boolean) => void;
 }
 
-export default function RentModal({ bookId }: RentModalProps) {
+export default function RentModal({ bookId, onModalStateChange }: RentModalProps) {
   const {
     renterName,
     setRenterName,
@@ -28,8 +29,15 @@ export default function RentModal({ bookId }: RentModalProps) {
   // Set the book ID when the modal is opened
   const handleOpenModal = () => {
     setShowRentModal(true);
+    onModalStateChange?.(true);
     // We need to set the selected book ID in the hook
     // For now, we'll handle this by passing it to the submit function
+  };
+
+  // Custom close handler
+  const handleCloseModal = () => {
+    closeRentModal();
+    onModalStateChange?.(false);
   };
 
   // Custom submit handler that includes the bookId
@@ -56,7 +64,7 @@ export default function RentModal({ bookId }: RentModalProps) {
 
       if (result.success) {
         alert("Book rented successfully!");
-        closeRentModal();
+        handleCloseModal();
         // Refresh the page to update availability
         window.location.reload();
       } else {
@@ -78,8 +86,8 @@ export default function RentModal({ bookId }: RentModalProps) {
       </Button>
 
       {showRentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+        <div className="fixed inset-0  bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
             <h3 className="text-xl font-bold text-gray-900 mb-4">
               Rent This Book
             </h3>
@@ -95,7 +103,7 @@ export default function RentModal({ bookId }: RentModalProps) {
                   onChange={(e) => setRenterName(e.target.value)}
                   required
                   disabled={isRenting}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+                  className="w-full p-3 border text-gray-600 border-gray-300 rounded-lg  disabled:bg-gray-100"
                   placeholder="Enter your name"
                 />
               </div>
@@ -110,7 +118,7 @@ export default function RentModal({ bookId }: RentModalProps) {
                   onChange={(e) => setRenterEmail(e.target.value)}
                   required
                   disabled={isRenting}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
+                  className="w-full p-3 border border-gray-300 rounded-lg text-gray-600  disabled:bg-gray-100"
                   placeholder="Enter your email"
                 />
               </div>
@@ -126,7 +134,7 @@ export default function RentModal({ bookId }: RentModalProps) {
                 </Button>
                 <Button
                   type="button"
-                  onClick={closeRentModal}
+                  onClick={handleCloseModal}
                   variant="outline"
                   className="flex-1"
                   disabled={isRenting}
