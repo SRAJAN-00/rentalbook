@@ -1,12 +1,13 @@
 import connectDB from "@/lib/mongodb";
 import Activity from "@/models/Activity";
 import User from "@/models/User";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth-options";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import Book from "@/models/Book";
+import { Session } from "next-auth";
 
-async function getUserIdFromSession(session: any) {
+async function getUserIdFromSession(session: Session | null) {
   if (session?.user?.email) {
     const user = await User.findOne({ email: session.user.email });
     if (user) {

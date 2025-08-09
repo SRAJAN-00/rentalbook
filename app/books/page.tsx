@@ -26,7 +26,7 @@ export default function BooksPage() {
       if (session) {
         try {
           // Use Promise.all to fetch books and favorites simultaneously for better performance
-          const [booksResponse, favoritesResponse] = await Promise.all([
+          const [booksResponse] = await Promise.all([
             fetch("/api/books"),
             fetch("/api/fav"),
           ]);

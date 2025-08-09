@@ -17,7 +17,6 @@ export default function RentModal({ bookId, onModalStateChange }: RentModalProps
     showRentModal,
     setShowRentModal,
     isRenting,
-    handleRentSubmit,
     closeRentModal,
   } = useRental({
     onRentalSuccess: () => {
@@ -70,7 +69,7 @@ export default function RentModal({ bookId, onModalStateChange }: RentModalProps
       } else {
         alert(result.error || "Failed to rent book");
       }
-    } catch (error) {
+    } catch {
       alert("Error renting book");
     }
   };

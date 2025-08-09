@@ -42,7 +42,7 @@ export default function DashboardStats({
           if (rentalsData.success) {
             totalRentals = rentalsData.data.length;
             activeRentals = rentalsData.data.filter(
-              (rental: any) => rental.status === "active"
+              (rental: { status: string }) => rental.status === "active"
             ).length;
           }
         }
@@ -61,7 +61,7 @@ export default function DashboardStats({
           if (activitiesData.success) {
             const currentMonth = new Date().getMonth();
             const currentYear = new Date().getFullYear();
-            monthlyViews = activitiesData.data.filter((activity: any) => {
+            monthlyViews = activitiesData.data.filter((activity: { timestamp: string }) => {
               const activityDate = new Date(activity.timestamp);
               return (
                 activityDate.getMonth() === currentMonth &&

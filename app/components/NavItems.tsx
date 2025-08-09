@@ -15,7 +15,7 @@ const navItems = [
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -58,15 +58,6 @@ export default function Navbar() {
   };
 
   const actionButtons = getActionButtons();
-
-  const getButtonStyles = (style: string) => {
-    const baseStyles =
-      "px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200";
-    if (style === "green") {
-      return `${baseStyles} bg-green-600 text-white hover:bg-green-700`;
-    }
-    return `${baseStyles} bg-blue-600 text-white hover:bg-blue-700`;
-  };
 
   return (
     <nav className="bg-gray-50 border border-red-500sticky top-0 z-50">

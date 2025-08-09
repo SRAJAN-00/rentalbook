@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import Image from "next/image";
 import Button from "../../components/ModernButton";
 import RentModal from "@/app/components/RentModal";
 import { useRental } from "../../hooks/useRental";
@@ -38,7 +36,6 @@ export default function BookDetailsPage({
     error,
     isAuthenticated,
     updateRentalStatus,
-    refreshBookDetails,
   } = useBookDetails(bookId);
 
   // Use rental hook for return functionality
@@ -156,10 +153,11 @@ export default function BookDetailsPage({
               <div className="lg:w-1/3 relative">
                 <div className="h-80 lg:h-96 relative overflow-hidden">
                   {book.imageUrl ? (
-                    <img
+                    <Image
                       src={book.imageUrl}
                       alt={book.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 flex items-center justify-center">
@@ -271,7 +269,6 @@ export default function BookDetailsPage({
                 <div className="flex flex-col sm:flex-row gap-3">
                   {isAvailable && !isRented ? (
                     <>
-                      <></>
                       <RentModal
                         bookId={book._id}
                         onModalStateChange={setIsRentModalOpen}

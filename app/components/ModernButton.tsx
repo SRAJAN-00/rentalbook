@@ -1,6 +1,7 @@
+"use client";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { easeInOut, motion } from "motion/react";
+import { motion } from "motion/react";
 
 type ButtonVariant = "primary" | "secondary" | "success" | "outline";
 type ButtonSize = "sm" | "md" | "lg";

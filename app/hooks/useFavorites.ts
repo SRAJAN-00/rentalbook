@@ -2,6 +2,12 @@
 
 import { useState, useEffect } from "react";
 
+interface FavoriteItem {
+  bookId: {
+    _id: string;
+  } | string;
+}
+
 interface UseFavoritesOptions {
   onRemove?: (bookId: string) => void; // Optional callback for removing from display
 }
@@ -40,8 +46,8 @@ export const useFavorites = (options?: UseFavoritesOptions) => {
 
           // data.data is an array of Fav objects with populated bookId
           const ids = data.data
-            .map((fav: any) => {
-              const bookId = fav.bookId?._id || fav.bookId;
+            .map((fav: FavoriteItem) => {
+              const bookId = typeof fav.bookId === 'object' ? fav.bookId._id : fav.bookId;
               console.log("Extracting bookId:", bookId, "from fav:", fav); // Debug log
               return bookId;
             })

@@ -6,8 +6,39 @@ import Button from "../../components/ModernButton";
 import Image from "next/image";
 import Link from "next/link";
 
+interface RentalDisplay {
+  id: string;
+  bookId: {
+    _id: string;
+    imageUrl?: string;
+  };
+  title: string;
+  author: string;
+  genre: string;
+  rentedDate: string;
+  dueDate: string;
+  status: string;
+  daysLeft?: number;
+  returnedDate?: string;
+}
+
+interface RentalApiData {
+  _id: string;
+  bookId?: {
+    _id: string;
+    title: string;
+    author: string;
+    genre: string;
+    imageUrl?: string;
+  };
+  rentDate: string;
+  dueDate: string;
+  status: string;
+  returnDate?: string;
+}
+
 export default function RentalsPage() {
-  const [rentals, setRentals] = useState<any[]>([]);
+  const [rentals, setRentals] = useState<RentalDisplay[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const fetchRentals = async () => {
@@ -18,7 +49,7 @@ export default function RentalsPage() {
 
       if (data.success) {
         // Format rental data for the UI
-        const formattedRentals = data.data.map((rental: any) => ({
+        const formattedRentals = data.data.map((rental: RentalApiData) => ({
           id: rental._id,
           bookId: {
             _id: rental.bookId?._id || rental.bookId,

@@ -18,6 +18,10 @@ interface Book {
   imageUrl?: string;
 }
 
+interface FavoriteItem {
+  bookId: Book;
+}
+
 export default function FavoritesPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +41,7 @@ export default function FavoritesPage() {
         const result = await response.json();
         if (response.ok && Array.isArray(result.data)) {
           // result.data is an array of Fav objects with populated bookId
-          const favoriteBooks = result.data.map((fav: any) => fav.bookId);
+          const favoriteBooks = result.data.map((fav: FavoriteItem) => fav.bookId);
           setBooks(favoriteBooks);
         } else {
           console.error("Failed to fetch favorites:", result.error);

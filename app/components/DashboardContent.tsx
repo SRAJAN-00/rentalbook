@@ -7,11 +7,36 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 
+// Type definitions
+interface RentalDisplay {
+  id: string;
+  bookId: string;
+  title: string;
+  author: string;
+  imageUrl?: string;
+  dueDate: string;
+  status: string;
+}
+
+interface Activity {
+  _id: string;
+  action: "rented" | "returned" | "favorited" | "unfavorited" | "viewed";
+  bookTitle: string;
+  bookAuthor: string;
+  timestamp: string;
+  createdAt: string;
+  bookId?: {
+    _id: string;
+    title: string;
+    author: string;
+    imageUrl?: string;
+  };
+}
+
 export default function DashboardContent() {
   // Animation helper function
   function enterAnimation(
     delay: number = 0.3,
-    x: number = 0,
     duration: number = 0.4
   ) {
     return {
@@ -21,8 +46,8 @@ export default function DashboardContent() {
     };
   }
 
-  const [recentBooks, setRecentBooks] = useState<any[]>([]);
-  const [recentActivities, setRecentActivities] = useState<any[]>([]);
+  const [recentBooks, setRecentBooks] = useState<RentalDisplay[]>([]);
+  const [recentActivities, setRecentActivities] = useState<Activity[]>([]);
   const [isLoadingRentals, setIsLoadingRentals] = useState(true);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
   const [progressStats, setProgressStats] = useState({
@@ -44,10 +69,10 @@ export default function DashboardContent() {
           if (data.success) {
             const transformedRentals = data.data.map(
               (rental: {
-                _id: any;
-                bookId: { _id: any; title: any; author: any; imageUrl?: any };
+                _id: string;
+                bookId: { _id: string; title: string; author: string; imageUrl?: string };
                 dueDate: string | number | Date;
-                status: any;
+                status: string;
               }) => ({
                 id: rental._id,
                 bookId: rental.bookId?._id || rental.bookId,
@@ -77,7 +102,7 @@ export default function DashboardContent() {
         setProgressStats((prev) => ({
           ...prev,
           currentRentals: rentalsPromise.value.length,
-          completedThisMonth: rentalsPromise.value.filter((rental: any) => {
+          completedThisMonth: rentalsPromise.value.filter((rental: RentalDisplay) => {
             const rentalDate = new Date(rental.dueDate);
             return (
               rentalDate.getMonth() === currentMonth &&
@@ -98,7 +123,7 @@ export default function DashboardContent() {
         // Calculate monthly views from activities
         const currentMonth = new Date().getMonth();
         const currentYear = new Date().getFullYear();
-        const monthlyViews = activitiesPromise.value.filter((activity: any) => {
+        const monthlyViews = activitiesPromise.value.filter((activity: Activity) => {
           const activityDate = new Date(activity.timestamp);
           return (
             activityDate.getMonth() === currentMonth &&
@@ -281,7 +306,7 @@ export default function DashboardContent() {
                   ))}
                 </div>
               ) : recentActivities.length > 0 ? (
-                recentActivities.map((activity: any, idx: number) => (
+                recentActivities.map((activity: Activity, idx: number) => (
                   <motion.div
                     key={`activity-${activity._id || idx}`}
                     className="flex items-start space-x-3"
@@ -350,7 +375,7 @@ export default function DashboardContent() {
           {/* Reading Progress */}
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
-              This Month's Progress
+              This Month&apos;s Progress
             </h2>
             <div className="space-y-4">
               <div>

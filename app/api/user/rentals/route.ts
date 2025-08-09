@@ -38,7 +38,7 @@ export async function GET() {
       success: true,
       data: rentals,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       {
         success: false,

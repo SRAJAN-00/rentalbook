@@ -5,9 +5,10 @@ import Fav from "@/models/Fav";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth-options";
+import { Session } from "next-auth";
 
-async function getUserIdFromSession(session: any) {
+async function getUserIdFromSession(session: Session | null) {
   console.log("getUserIdFromSession - session:", session); // Debug log
 
   // Always look up user by email to get the proper MongoDB ObjectId

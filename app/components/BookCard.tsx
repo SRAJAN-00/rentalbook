@@ -17,14 +17,12 @@ interface Book {
 
 interface BookCardProps {
   book: Book;
-  onRent?: (bookId: string) => void;
   isFavorite?: boolean;
   onToggleFavorite?: (bookId: string, isFav: boolean) => void;
 }
 
 export default function BookCard({
   book,
-  onRent,
   isFavorite = false,
   onToggleFavorite,
 }: BookCardProps) {

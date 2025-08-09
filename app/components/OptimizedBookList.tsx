@@ -38,7 +38,6 @@ export default function OptimizedBookList({
     setRenterEmail,
     showRentModal,
     isRenting,
-    handleRent,
     handleRentSubmit,
     closeRentModal,
   } = useRental({
@@ -74,7 +73,7 @@ export default function OptimizedBookList({
       if (result.success) {
         setBooks(result.data);
       }
-    } catch (error) {
+    } catch {
       setError("Error refreshing books");
     } finally {
       setLoading(false);
@@ -125,14 +124,6 @@ export default function OptimizedBookList({
         }
       });
   }, [books, genreFilter, availabilityFilter, sortBy, debouncedSearchTerm]);
-
-  // Memoized event handlers
-  const handleRentCallback = useCallback(
-    (bookId: string) => {
-      handleRent(bookId);
-    },
-    [handleRent]
-  );
 
   const clearFilters = useCallback(() => {
     setGenreFilter("");
@@ -217,7 +208,7 @@ export default function OptimizedBookList({
           </p>
           {debouncedSearchTerm && (
             <p className="text-blue-600 mt-1">
-              Search results for: "{debouncedSearchTerm}"
+              Search results for: &quot;{debouncedSearchTerm}&quot;
             </p>
           )}
         </div>
@@ -281,7 +272,6 @@ export default function OptimizedBookList({
             <BookCard
               key={book._id}
               book={book}
-              onRent={handleRentCallback}
               isFavorite={favoriteIds.includes(book._id)}
               onToggleFavorite={handleToggleFavorite}
             />

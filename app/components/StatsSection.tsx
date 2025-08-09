@@ -63,7 +63,7 @@ export function StatsSection() {
             },
           ]);
         }
-      } catch (err) {
+      } catch {
         // fallback: keep dashes
       }
     }

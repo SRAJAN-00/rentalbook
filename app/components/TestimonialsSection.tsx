@@ -52,7 +52,7 @@ export function TestimonialsSection() {
             What Our Readers Say
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Don't just take our word for it - hear from our amazing community of
+            Don&apos;t just take our word for it - hear from our amazing community of
             readers
           </p>
         </motion.div>
@@ -82,7 +82,7 @@ export function TestimonialsSection() {
 
               {/* Quote */}
               <blockquote className="text-gray-700 text-lg leading-relaxed mb-6">
-                "{testimonial.text}"
+                &quot;{testimonial.text}&quot;
               </blockquote>
 
               {/* Author Info */}
@@ -140,7 +140,7 @@ export function TestimonialsSection() {
             <div className="text-center">
               <div className="text-3xl mb-2">💬</div>
               <div className="font-semibold">24/7 Support</div>
-              <div className="text-blue-200 text-sm">We're here to help</div>
+              <div className="text-blue-200 text-sm">We&apos;re here to help</div>
             </div>
           </div>
         </motion.div>
