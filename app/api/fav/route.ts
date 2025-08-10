@@ -8,6 +8,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth-options";
 import { Session } from "next-auth";
 
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 async function getUserIdFromSession(session: Session | null) {
   console.log("getUserIdFromSession - session:", session); // Debug log
 
@@ -39,7 +51,7 @@ export async function POST(request: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { success: false, error: "User not found or not logged in" },
-        { status: 401 }
+        { status: 401, headers: corsHeaders }
       );
     }
 
@@ -50,7 +62,7 @@ export async function POST(request: NextRequest) {
     if (!book) {
       return NextResponse.json(
         { success: false, error: "Book not found" },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -62,7 +74,7 @@ export async function POST(request: NextRequest) {
     if (existingFav) {
       return NextResponse.json(
         { success: false, error: "Book is already in favorites" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -78,13 +90,13 @@ export async function POST(request: NextRequest) {
         success: true,
         data: favBook,
       },
-      { status: 201 }
+      { status: 201, headers: corsHeaders }
     );
   } catch (error) {
     console.error("Error creating favorite:", error);
     return NextResponse.json(
       { success: false, error: "Failed to create favorite" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
@@ -99,7 +111,7 @@ export async function DELETE(request: NextRequest) {
     if (!userId) {
       return NextResponse.json(
         { success: false, error: "User not found or not logged in" },
-        { status: 401 }
+        { status: 401, headers: corsHeaders }
       );
     }
 
@@ -113,7 +125,7 @@ export async function DELETE(request: NextRequest) {
     if (!existingFav) {
       return NextResponse.json(
         { success: false, error: "Favorite not found" },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -122,13 +134,13 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json(
       { success: true, message: "Removed from favorites" },
-      { status: 200 }
+      { status: 200, headers: corsHeaders }
     );
   } catch (error) {
     console.error("Error removing favorite:", error);
     return NextResponse.json(
       { success: false, error: "Failed to remove favorite" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
@@ -149,7 +161,7 @@ export async function GET() {
       return NextResponse.json({
         success: true,
         data: [], // Return empty array instead of error
-      });
+      }, { headers: corsHeaders });
     }
 
     // Get only the current user's favorites
@@ -176,12 +188,12 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: favorites,
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error("Error fetching favorites:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch favorites" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Book from "@/models/Book";
 
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 // GET all books
 export async function GET() {
   try {
@@ -11,12 +23,12 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: books,
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error("Error fetching books:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch books" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
@@ -34,13 +46,13 @@ export async function POST(request: NextRequest) {
         success: true,
         data: book,
       },
-      { status: 201 }
+      { status: 201, headers: corsHeaders }
     );
   } catch (error) {
     console.error("Error creating book:", error);
     return NextResponse.json(
       { success: false, error: "Failed to create book" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

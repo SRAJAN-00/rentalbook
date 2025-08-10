@@ -59,7 +59,7 @@ export default function BookDetailsPage({
   // Show loading while checking authentication or fetching data
   if (loading) {
     return (
-      <div className="min-h-screen   border border-amber-500 bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen    bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           {/* Animated Book Icon */}
           <div className="relative mb-8">
@@ -128,7 +128,7 @@ export default function BookDetailsPage({
   return (
     <DashboardLayout title={book ? "Book Details" : ""}>
       <div
-        className={`min-h-screen bg-gradient-to-br  border border-amber-500 rounded-2xl  from-gray-50 to-blue-50 transition-all duration-300 ${
+        className={`min-h-screen bg-gradient-to-br  rounded-2xl  from-gray-50 to-blue-50 transition-all duration-300 ${
           isRentModalOpen ? "bg-blur-sm  " : ""
         }`}
       >
@@ -145,7 +145,7 @@ export default function BookDetailsPage({
         </div>
 
         {/* Compact Main Content */}
-        <div className="max-w-5xl mx-auto pr-50 border mr-20 py-6 border-amber-500 sm:px-6 lg:px-8 ">
+        <div className="max-w-5xl mx-auto pr-50  mr-20 py-6 sm:px-6 lg:px-8 ">
           {/* Hero Section - More Compact */}
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-white/20">
             <div className="lg:flex">

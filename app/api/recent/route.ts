@@ -7,6 +7,18 @@ import { NextRequest, NextResponse } from "next/server";
 import Book from "@/models/Book";
 import { Session } from "next-auth";
 
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 async function getUserIdFromSession(session: Session | null) {
   if (session?.user?.email) {
     const user = await User.findOne({ email: session.user.email });
@@ -30,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     if (!userId) {
       console.log("POST /api/recent - No userId, returning 401");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders });
     }
 
     const { bookId } = await request.json();
@@ -40,7 +52,7 @@ export async function POST(request: NextRequest) {
       console.log("POST /api/recent - No bookId provided");
       return NextResponse.json(
         { error: "Book ID is required" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 

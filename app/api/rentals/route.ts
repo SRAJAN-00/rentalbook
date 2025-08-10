@@ -4,6 +4,18 @@ import Rental from "@/models/Rental";
 import Book from "@/models/Book";
 import { getServerSession } from "next-auth";
 
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 // GET all rentals
 export async function GET() {
   try {
@@ -15,12 +27,12 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: rentals,
-    });
+    }, { headers: corsHeaders });
   } catch (error) {
     console.error("Error fetching rentals:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch rentals" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
@@ -35,7 +47,7 @@ export async function POST(request: NextRequest) {
     if (!session || !session.user?.email) {
       return NextResponse.json(
         { success: false, error: "You must be logged in to rent a book" },
-        { status: 401 }
+        { status: 401, headers: corsHeaders }
       );
     }
 
@@ -46,14 +58,14 @@ export async function POST(request: NextRequest) {
     if (!book) {
       return NextResponse.json(
         { success: false, error: "Book not found" },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
     if (book.availableCopies <= 0) {
       return NextResponse.json(
         { success: false, error: "Book is not available for rent" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -79,13 +91,13 @@ export async function POST(request: NextRequest) {
         success: true,
         data: rental,
       },
-      { status: 201 }
+      { status: 201, headers: corsHeaders }
     );
   } catch (error) {
     console.error("Error creating rental:", error);
     return NextResponse.json(
       { success: false, error: "Failed to create rental" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }
