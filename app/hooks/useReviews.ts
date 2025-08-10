@@ -13,12 +13,6 @@ interface Review {
   updatedAt: string;
 }
 
-interface ReviewsData {
-  reviews: Review[];
-  averageRating: number;
-  totalReviews: number;
-}
-
 interface UseReviewsReturn {
   reviews: Review[];
   averageRating: number;

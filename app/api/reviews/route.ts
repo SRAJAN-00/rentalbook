@@ -5,6 +5,7 @@ import Book from "@/models/Book";
 import User from "@/models/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
+import { Session } from "next-auth";
 
 // CORS headers
 const corsHeaders = {
@@ -18,7 +19,7 @@ export async function OPTIONS() {
   return new Response(null, { status: 200, headers: corsHeaders });
 }
 
-async function getUserIdFromSession(session: any) {
+async function getUserIdFromSession(session: Session | null) {
   if (session?.user?.email) {
     const user = await User.findOne({ email: session.user.email });
     if (user) {

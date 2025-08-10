@@ -4,6 +4,18 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useReviews } from "../hooks/useReviews";
 
+interface Review {
+  _id: string;
+  bookId: string;
+  userId: string;
+  rating: number;
+  comment: string;
+  userName: string;
+  userEmail: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface StarRatingProps {
   rating: number;
   onRatingChange?: (rating: number) => void;
@@ -53,7 +65,7 @@ function StarRating({ rating, onRatingChange, editable = false, size = "md" }: S
 
 interface ReviewFormProps {
   bookId: string;
-  existingReview?: any;
+  existingReview?: Review;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -98,7 +110,7 @@ function ReviewForm({ bookId, existingReview, onSuccess, onCancel }: ReviewFormP
           setComment("");
         }
       }
-    } catch (err) {
+    } catch {
       setError("Failed to submit review");
     } finally {
       setIsSubmitting(false);
@@ -171,7 +183,7 @@ interface ReviewsProps {
 export default function Reviews({ bookId }: ReviewsProps) {
   const { data: session } = useSession();
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [editingReview, setEditingReview] = useState<any>(null);
+  const [editingReview, setEditingReview] = useState<Review | undefined>(undefined);
   
   const {
     reviews,
@@ -247,11 +259,11 @@ export default function Reviews({ bookId }: ReviewsProps) {
           existingReview={editingReview}
           onSuccess={() => {
             setShowReviewForm(false);
-            setEditingReview(null);
+            setEditingReview(undefined);
           }}
           onCancel={() => {
             setShowReviewForm(false);
-            setEditingReview(null);
+            setEditingReview(undefined);
           }}
         />
       )}
