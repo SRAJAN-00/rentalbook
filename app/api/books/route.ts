@@ -20,10 +20,13 @@ export async function GET() {
     await connectDB();
     const books = await Book.find({}).sort({ createdAt: -1 });
 
-    return NextResponse.json({
-      success: true,
-      data: books,
-    }, { headers: corsHeaders });
+    return NextResponse.json(
+      {
+        success: true,
+        data: books,
+      },
+      { headers: corsHeaders }
+    );
   } catch (error) {
     console.error("Error fetching books:", error);
     return NextResponse.json(

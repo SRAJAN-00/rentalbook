@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Button from "../../components/ModernButton";
 import RentModal from "@/app/components/RentModal";
+import Reviews from "@/app/components/Reviews";
+import BookRating from "@/app/components/BookRating";
 import { useRental } from "../../hooks/useRental";
 import { useBookDetails } from "../../hooks/useBookDetails";
 import { useRecent } from "../../hooks/useRecent";
@@ -128,30 +130,20 @@ export default function BookDetailsPage({
   return (
     <DashboardLayout title={book ? "Book Details" : ""}>
       <div
-        className={`min-h-screen bg-gradient-to-br  rounded-2xl  from-gray-50 to-blue-50 transition-all duration-300 ${
+        className={`min-h-screen bg-gradient-to-br w-full rounded-2xl  from-gray-50 to-blue-50 transition-all duration-300 ${
           isRentModalOpen ? "bg-blur-sm  " : ""
         }`}
       >
         {/* Compact Header */}
-        <div className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-white/20 sticky top-0 z-10">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-14">
-              <h1 className="text-lg font-semibold text-gray-900">
-                Book Details
-              </h1>
-              <div className="w-24"></div>
-            </div>
-          </div>
-        </div>
 
         {/* Compact Main Content */}
-        <div className="max-w-5xl mx-auto pr-50  mr-20 py-6 sm:px-6 lg:px-8 ">
+        <div className="max-w-10xl mx-auto pr-50  py-6 sm:px-6 lg:px-8 ">
           {/* Hero Section - More Compact */}
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-white/20">
             <div className="lg:flex">
               {/* Book Image Section - Smaller */}
               <div className="lg:w-1/3 relative">
-                <div className="h-80 lg:h-96 relative overflow-hidden">
+                <div className=" mt-10  rounded-lg ml-5 h-80 lg:h-96 relative overflow-hidden">
                   {book.imageUrl ? (
                     <Image
                       src={book.imageUrl}
@@ -200,12 +192,17 @@ export default function BookDetailsPage({
               <div className="lg:w-2/3 p-6">
                 {/* Title and Author - Smaller */}
                 <div className="mb-6">
-                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2 leading-tight">
+                  <h1 className="text-2xl lg:text-3xl mt-5 font-bold text-gray-900  leading-tight">
                     {book.title}
                   </h1>
-                  <p className="text-lg lg:text-xl text-blue-600 font-semibold mb-4">
+                  <p className="text-sm lg:text-sm text-blue-600 font-medium mb-4">
                     by {book.author}
                   </p>
+
+                  {/* Rating */}
+                  <div className="mb-4">
+                    <BookRating bookId={bookId} size="md" />
+                  </div>
 
                   {/* Compact Tags */}
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -219,6 +216,19 @@ export default function BookDetailsPage({
                 </div>
 
                 {/* Compact Stats Cards */}
+
+                {/* Compact Description */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
+                    <span className="mr-2">📝</span>
+                    Description
+                  </h3>
+                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200/50">
+                    <p className="text-gray-700 leading-relaxed text-sm">
+                      {book.description}
+                    </p>
+                  </div>
+                </div>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-4 border border-green-200/50">
                     <div className="flex items-center space-x-2">
@@ -251,20 +261,6 @@ export default function BookDetailsPage({
                     </div>
                   </div>
                 </div>
-
-                {/* Compact Description */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                    <span className="mr-2">📝</span>
-                    Description
-                  </h3>
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200/50">
-                    <p className="text-gray-700 leading-relaxed text-sm">
-                      {book.description}
-                    </p>
-                  </div>
-                </div>
-
                 {/* Compact Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   {isAvailable && !isRented ? (
@@ -277,9 +273,9 @@ export default function BookDetailsPage({
                         href="/books"
                         variant="outline"
                         size="md"
-                        className="px-6 py-2 text-sm font-semibold rounded-xl border-2 hover:scale-105 transition-all duration-200"
+                        className="font-medium   "
                       >
-                        Browse More Books
+                        Browse More
                       </Button>
                     </>
                   ) : isRented ? (
@@ -290,7 +286,6 @@ export default function BookDetailsPage({
                         size="md"
                         disabled={isReturning}
                         //add here nothing
-                        className="px-6 py-2 text-sm font-semibold rounded-xl hover:scale-105 transition-all duration-200 disabled:hover:scale-100"
                       >
                         {isReturning ? (
                           <span className="flex items-center">
@@ -305,7 +300,6 @@ export default function BookDetailsPage({
                         href="/dashboard/rentals"
                         variant="outline"
                         size="md"
-                        className="px-6 py-2 text-sm font-semibold rounded-xl border-2 hover:scale-105 transition-all duration-200"
                       >
                         My Rentals
                       </Button>
@@ -412,6 +406,13 @@ export default function BookDetailsPage({
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Reviews Section */}
+          <div className="mt-8 bg-white rounded-3xl shadow-lg overflow-hidden">
+            <div className="p-6">
+              <Reviews bookId={bookId} />
             </div>
           </div>
         </div>

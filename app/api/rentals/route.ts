@@ -24,10 +24,13 @@ export async function GET() {
       .populate("bookId", "title author")
       .sort({ createdAt: -1 });
 
-    return NextResponse.json({
-      success: true,
-      data: rentals,
-    }, { headers: corsHeaders });
+    return NextResponse.json(
+      {
+        success: true,
+        data: rentals,
+      },
+      { headers: corsHeaders }
+    );
   } catch (error) {
     console.error("Error fetching rentals:", error);
     return NextResponse.json(

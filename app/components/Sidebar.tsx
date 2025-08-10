@@ -147,15 +147,12 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-neutral-100 lg:hidden"
-          onClick={onToggle}
-        />
+        <div className="fixed inset-0  lg:hidden" onClick={onToggle} />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen   border-gray-200 transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 z-50 h-screen bg-neutral-100 border-gray-200 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } w-56 lg:translate-x-0 flex flex-col`}
       >

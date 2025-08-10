@@ -158,10 +158,13 @@ export async function GET() {
       console.log(
         "GET /api/fav - No userId, returning empty array instead of 401"
       ); // Debug log
-      return NextResponse.json({
-        success: true,
-        data: [], // Return empty array instead of error
-      }, { headers: corsHeaders });
+      return NextResponse.json(
+        {
+          success: true,
+          data: [], // Return empty array instead of error
+        },
+        { headers: corsHeaders }
+      );
     }
 
     // Get only the current user's favorites
@@ -185,10 +188,13 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: favorites,
-    }, { headers: corsHeaders });
+    return NextResponse.json(
+      {
+        success: true,
+        data: favorites,
+      },
+      { headers: corsHeaders }
+    );
   } catch (error) {
     console.error("Error fetching favorites:", error);
     return NextResponse.json(

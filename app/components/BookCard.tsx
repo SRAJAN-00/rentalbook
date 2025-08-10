@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Fav from "./fav";
 import Button from "./ModernButton";
+import BookRating from "./BookRating";
 import Link from "next/link";
 
 interface Book {
@@ -94,6 +95,11 @@ export default function BookCard({
           <span className="text-gray-500 text-xs bg-gray-100 px-2 py-1 rounded-full">
             {book.publishedYear}
           </span>
+        </div>
+
+        {/* Rating */}
+        <div className="mb-3">
+          <BookRating bookId={book._id} size="sm" />
         </div>
 
         {/* Bottom Section */}

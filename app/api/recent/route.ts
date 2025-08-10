@@ -42,7 +42,10 @@ export async function POST(request: NextRequest) {
 
     if (!userId) {
       console.log("POST /api/recent - No userId, returning 401");
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: corsHeaders });
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401, headers: corsHeaders }
+      );
     }
 
     const { bookId } = await request.json();
