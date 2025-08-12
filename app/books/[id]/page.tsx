@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Button from "../../components/ModernButton";
-import RentModal from "@/app/components/RentModal";
 import Reviews from "@/app/components/Reviews";
 import BookRating from "@/app/components/BookRating";
 import { useRental } from "../../hooks/useRental";
@@ -18,7 +17,6 @@ export default function BookDetailsPage({
   params: Promise<{ id: string }>;
 }) {
   const [bookId, setBookId] = useState<string>("");
-  const [isRentModalOpen, setIsRentModalOpen] = useState(false);
 
   // Extract book ID from params
   useEffect(() => {
@@ -61,42 +59,62 @@ export default function BookDetailsPage({
   // Show loading while checking authentication or fetching data
   if (loading) {
     return (
-      <div className="min-h-screen    bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          {/* Animated Book Icon */}
-          <div className="relative mb-8">
-            <div className="w-32 h-32 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
-              <span className="text-6xl animate-bounce">📚</span>
+      <DashboardLayout title="Loading...">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
+          <div className="text-center max-w-md mx-auto">
+            {/* Enhanced Animated Book Icon */}
+            <div className="relative mb-8">
+              <div className="w-32 h-32 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
+                <span className="text-6xl animate-bounce">📚</span>
+              </div>
+              {/* Enhanced floating particles */}
+              <div className="absolute -top-3 -right-3 w-5 h-5 bg-blue-400 rounded-full animate-ping"></div>
+              <div className="absolute -bottom-3 -left-3 w-4 h-4 bg-purple-400 rounded-full animate-ping delay-150"></div>
+              <div className="absolute top-1/2 -right-5 w-3 h-3 bg-indigo-400 rounded-full animate-ping delay-300"></div>
+              <div className="absolute bottom-1/4 -left-4 w-2 h-2 bg-pink-400 rounded-full animate-ping delay-500"></div>
+
+              {/* Rotating ring */}
+              <div className="absolute inset-0 border-4 border-transparent border-t-blue-300 rounded-full animate-spin"></div>
+              <div className="absolute inset-2 border-2 border-transparent border-b-purple-300 rounded-full animate-spin animation-direction-reverse"></div>
             </div>
-            {/* Floating particles */}
-            <div className="absolute -top-2 -right-2 w-4 h-4 bg-blue-400 rounded-full animate-ping"></div>
-            <div className="absolute -bottom-2 -left-2 w-3 h-3 bg-purple-400 rounded-full animate-ping delay-150"></div>
-            <div className="absolute top-1/2 -right-4 w-2 h-2 bg-indigo-400 rounded-full animate-ping delay-300"></div>
-          </div>
 
-          {/* Loading Text */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">
-              Loading Book Details
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Please wait while we fetch the information...
-            </p>
+            {/* Enhanced Loading Text */}
+            <div className="space-y-4">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 via-blue-700 to-purple-700 bg-clip-text text-transparent">
+                Loading Book Details
+              </h2>
+              <p className="text-gray-600 text-lg font-medium">
+                Please wait while we fetch the information...
+              </p>
 
-            {/* Progress Dots */}
-            <div className="flex justify-center space-x-2 mt-6">
-              <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
-              <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce delay-100"></div>
-              <div className="w-3 h-3 bg-indigo-500 rounded-full animate-bounce delay-200"></div>
+              {/* Enhanced Progress Dots */}
+              <div className="flex justify-center space-x-3 mt-8">
+                <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full animate-bounce shadow-lg"></div>
+                <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full animate-bounce delay-100 shadow-lg"></div>
+                <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full animate-bounce delay-200 shadow-lg"></div>
+                <div className="w-4 h-4 bg-gradient-to-r from-pink-500 to-pink-600 rounded-full animate-bounce delay-300 shadow-lg"></div>
+              </div>
             </div>
-          </div>
 
-          {/* Loading Bar */}
-          <div className="mt-8 w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
+            {/* Enhanced Loading Bar */}
+            <div className="mt-10 w-80 max-w-full mx-auto">
+              <div className="h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 rounded-full animate-pulse shadow-sm"></div>
+              </div>
+              <p className="text-sm text-gray-500 mt-3 font-medium">
+                Preparing your reading experience...
+              </p>
+            </div>
+
+            {/* Loading skeleton preview */}
+            <div className="mt-12 space-y-4 opacity-30">
+              <div className="h-4 bg-gray-300 rounded-full animate-pulse"></div>
+              <div className="h-4 bg-gray-300 rounded-full animate-pulse delay-100"></div>
+              <div className="h-4 bg-gray-300 rounded-full w-3/4 mx-auto animate-pulse delay-200"></div>
+            </div>
           </div>
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
@@ -129,21 +147,17 @@ export default function BookDetailsPage({
 
   return (
     <DashboardLayout title={book ? "Book Details" : ""}>
-      <div
-        className={`min-h-screen bg-gradient-to-br w-full rounded-2xl  from-gray-50 to-blue-50 transition-all duration-300 ${
-          isRentModalOpen ? "bg-blur-sm  " : ""
-        }`}
-      >
+      <div className="min-h-screen bg-gradient-to-br w-full rounded-2xl from-gray-50 to-blue-50 transition-all duration-300">
         {/* Compact Header */}
 
         {/* Compact Main Content */}
-        <div className="max-w-10xl mx-auto pr-50  py-6 sm:px-6 lg:px-8 ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           {/* Hero Section - More Compact */}
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-white/20">
-            <div className="lg:flex">
+            <div className="flex flex-col lg:flex-row">
               {/* Book Image Section - Smaller */}
               <div className="lg:w-1/3 relative">
-                <div className=" mt-10  rounded-lg ml-5 h-80 lg:h-96 relative overflow-hidden">
+                <div className="mx-4 mt-4 sm:mx-6 sm:mt-6 lg:mx-5 lg:mt-10 rounded-lg h-64 sm:h-80 lg:h-96 relative overflow-hidden">
                   {book.imageUrl ? (
                     <Image
                       src={book.imageUrl}
@@ -154,8 +168,10 @@ export default function BookDetailsPage({
                   ) : (
                     <div className="w-full h-full bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 flex items-center justify-center">
                       <div className="text-center text-white">
-                        <div className="text-6xl mb-3">📖</div>
-                        <span className="text-sm font-medium opacity-90">
+                        <div className="text-4xl sm:text-6xl mb-2 sm:mb-3">
+                          📖
+                        </div>
+                        <span className="text-xs sm:text-sm font-medium opacity-90">
                           No Cover Available
                         </span>
                       </div>
@@ -163,9 +179,9 @@ export default function BookDetailsPage({
                   )}
 
                   {/* Compact Floating Badge */}
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4">
                     <div
-                      className={`px-3 py-1.5 rounded-lg font-semibold text-xs shadow-lg backdrop-blur-sm border ${
+                      className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg font-semibold text-xs shadow-lg backdrop-blur-sm border ${
                         isAvailable
                           ? "bg-green-500/90 text-white border-green-400/30"
                           : "bg-red-500/90 text-white border-red-400/30"
@@ -179,8 +195,8 @@ export default function BookDetailsPage({
 
                   {/* Rental Status Badge */}
                   {isRented && (
-                    <div className="absolute top-4 left-4">
-                      <div className="px-3 py-1.5 rounded-lg font-semibold text-xs bg-blue-500/90 text-white shadow-lg backdrop-blur-sm border border-blue-400/30">
+                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4">
+                      <div className="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg font-semibold text-xs bg-blue-500/90 text-white shadow-lg backdrop-blur-sm border border-blue-400/30">
                         Currently Rented
                       </div>
                     </div>
@@ -189,72 +205,74 @@ export default function BookDetailsPage({
               </div>
 
               {/* Book Information Section - More Compact */}
-              <div className="lg:w-2/3 p-6">
+              <div className="lg:w-2/3 p-4 sm:p-6">
                 {/* Title and Author - Smaller */}
-                <div className="mb-6">
-                  <h1 className="text-2xl lg:text-3xl mt-5 font-bold text-gray-900  leading-tight">
+                <div className="mb-4 sm:mb-6">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl mt-2 sm:mt-5 font-bold text-gray-900 leading-tight">
                     {book.title}
                   </h1>
-                  <p className="text-sm lg:text-sm text-blue-600 font-medium mb-4">
+                  <p className="text-sm lg:text-base text-blue-600 font-medium mb-3 sm:mb-4">
                     by {book.author}
                   </p>
 
                   {/* Rating */}
-                  <div className="mb-4">
+                  <div className="mb-3 sm:mb-4">
                     <BookRating bookId={bookId} size="md" />
                   </div>
 
                   {/* Compact Tags */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg font-medium text-xs">
+                  <div className="flex flex-wrap gap-2 mb-3 sm:mb-4">
+                    <span className="bg-blue-100 text-blue-800 px-2 sm:px-3 py-1 rounded-lg font-medium text-xs">
                       📚 {book.genre}
                     </span>
-                    <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-lg font-medium text-xs">
+                    <span className="bg-purple-100 text-purple-800 px-2 sm:px-3 py-1 rounded-lg font-medium text-xs">
                       📅 {book.publishedYear}
                     </span>
                   </div>
                 </div>
 
-                {/* Compact Stats Cards */}
-
                 {/* Compact Description */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
+                <div className="mb-4 sm:mb-6">
+                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 flex items-center">
                     <span className="mr-2">📝</span>
                     Description
                   </h3>
-                  <div className="bg-gray-50 rounded-xl p-4 border border-gray-200/50">
+                  <div className="bg-gray-50 rounded-xl p-3 sm:p-4 border border-gray-200/50">
                     <p className="text-gray-700 leading-relaxed text-sm">
                       {book.description}
                     </p>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-4 border border-green-200/50">
+
+                {/* Compact Stats Cards */}
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-3 sm:p-4 border border-green-200/50">
                     <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-sm">✓</span>
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-xs sm:text-sm">✓</span>
                       </div>
-                      <div>
-                        <h3 className="text-xs font-semibold text-green-700 mb-0.5">
+                      <div className="min-w-0">
+                        <h3 className="text-xs font-semibold text-green-700 mb-0.5 truncate">
                           Available Now
                         </h3>
-                        <p className="text-xl font-bold text-green-800">
+                        <p className="text-lg sm:text-xl font-bold text-green-800">
                           {book.availableCopies}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-4 border border-blue-200/50">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-3 sm:p-4 border border-blue-200/50">
                     <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white text-sm">📖</span>
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-xs sm:text-sm">
+                          📖
+                        </span>
                       </div>
-                      <div>
-                        <h3 className="text-xs font-semibold text-blue-700 mb-0.5">
+                      <div className="min-w-0">
+                        <h3 className="text-xs font-semibold text-blue-700 mb-0.5 truncate">
                           Total Copies
                         </h3>
-                        <p className="text-xl font-bold text-blue-800">
+                        <p className="text-lg sm:text-xl font-bold text-blue-800">
                           {book.totalCopies}
                         </p>
                       </div>
@@ -262,19 +280,18 @@ export default function BookDetailsPage({
                   </div>
                 </div>
                 {/* Compact Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col gap-3 max-w-20">
                   {isAvailable && !isRented ? (
                     <>
-                      <RentModal
-                        bookId={book._id}
-                        onModalStateChange={setIsRentModalOpen}
-                      />
                       <Button
-                        href="/books"
-                        variant="outline"
+                        href={`/books/${book._id}/rent`}
+                        variant="primary"
                         size="md"
-                        className="font-medium   "
+                        className="px-6 py-3 text-sm font-semibold rounded-xl hover:scale-105 transition-all duration-200 w-full sm:w-auto"
                       >
+                        📚 Rent This Book
+                      </Button>
+                      <Button href="/books" variant="outline" size="md">
                         Browse More
                       </Button>
                     </>
@@ -285,10 +302,9 @@ export default function BookDetailsPage({
                         variant="secondary"
                         size="md"
                         disabled={isReturning}
-                        //add here nothing
                       >
                         {isReturning ? (
-                          <span className="flex items-center">
+                          <span className="flex items-center justify-center">
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                             Returning...
                           </span>
@@ -300,6 +316,7 @@ export default function BookDetailsPage({
                         href="/dashboard/rentals"
                         variant="outline"
                         size="md"
+                        className="w-full sm:w-auto"
                       >
                         My Rentals
                       </Button>
@@ -310,7 +327,7 @@ export default function BookDetailsPage({
                         disabled
                         variant="outline"
                         size="md"
-                        className="px-6 py-2 text-sm font-semibold rounded-xl border-2 opacity-50 cursor-not-allowed"
+                        className="px-4 sm:px-6 py-2 text-sm font-semibold rounded-xl border-2 opacity-50 cursor-not-allowed w-full sm:w-auto"
                       >
                         Currently Unavailable
                       </Button>
@@ -318,7 +335,7 @@ export default function BookDetailsPage({
                         href="/books"
                         variant="primary"
                         size="md"
-                        className="px-6 py-2 text-sm font-semibold rounded-xl hover:scale-105 transition-all duration-200"
+                        className="px-4 sm:px-6 py-2 text-sm font-semibold rounded-xl hover:scale-105 transition-all duration-200 w-full sm:w-auto"
                       >
                         Browse Other Books
                       </Button>
@@ -330,24 +347,24 @@ export default function BookDetailsPage({
           </div>
 
           {/* Compact Additional Information */}
-          <div className="mt-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 border border-white/20">
-            <div className="grid lg:grid-cols-2 gap-6">
+          <div className="mt-4 sm:mt-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-4 sm:p-6 border border-white/20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Book Details */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
                   <span className="mr-2">📊</span>
                   Book Details
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                <div className="space-y-2 sm:space-y-3">
+                  <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-xl">
                     <span className="font-medium text-gray-700 text-sm">
                       Genre
                     </span>
-                    <span className="text-gray-900 font-medium text-sm">
+                    <span className="text-gray-900 font-medium text-sm truncate ml-2">
                       {book.genre}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-xl">
                     <span className="font-medium text-gray-700 text-sm">
                       Published
                     </span>
@@ -355,7 +372,7 @@ export default function BookDetailsPage({
                       {book.publishedYear}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-xl">
                     <span className="font-medium text-gray-700 text-sm">
                       Status
                     </span>
@@ -375,25 +392,25 @@ export default function BookDetailsPage({
 
               {/* Rental Information */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center">
                   <span className="mr-2">ℹ️</span>
                   Rental Info
                 </h3>
                 <div className="space-y-2">
                   <div className="flex items-start space-x-2">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
                     <p className="text-gray-700 text-sm">
                       Standard rental period is 14 days
                     </p>
                   </div>
                   <div className="flex items-start space-x-2">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
                     <p className="text-gray-700 text-sm">
                       Late returns may incur fees
                     </p>
                   </div>
                   <div className="flex items-start space-x-2">
-                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5"></div>
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-1.5 flex-shrink-0"></div>
                     <p className="text-gray-700 text-sm">
                       Books can be renewed if available
                     </p>

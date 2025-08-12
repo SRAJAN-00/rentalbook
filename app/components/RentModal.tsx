@@ -85,8 +85,8 @@ export default function RentModal({ bookId, onModalStateChange }: RentModalProps
       </Button>
 
       {showRentModal && (
-        <div className="fixed inset-0  bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl">
+        <div className="fixed inset-0 bg-gray-100 bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 w-full max-w-2xl shadow-2xl mx-4 transform animate-slideIn">
             <h3 className="text-xl font-bold text-gray-900 mb-4">
               Rent This Book
             </h3>

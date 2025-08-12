@@ -13,8 +13,15 @@ interface RatingData {
   totalReviews: number;
 }
 
-export default function BookRating({ bookId, showCount = true, size = "sm" }: BookRatingProps) {
-  const [ratingData, setRatingData] = useState<RatingData>({ averageRating: 0, totalReviews: 0 });
+export default function BookRating({
+  bookId,
+  showCount = true,
+  size = "sm",
+}: BookRatingProps) {
+  const [ratingData, setRatingData] = useState<RatingData>({
+    averageRating: 0,
+    totalReviews: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +29,7 @@ export default function BookRating({ bookId, showCount = true, size = "sm" }: Bo
       try {
         const response = await fetch(`/api/reviews?bookId=${bookId}`);
         const data = await response.json();
-        
+
         if (data.success) {
           setRatingData({
             averageRating: data.data.averageRating,
@@ -48,7 +55,9 @@ export default function BookRating({ bookId, showCount = true, size = "sm" }: Bo
           {[1, 2, 3, 4, 5].map((star) => (
             <div
               key={star}
-              className={`${size === "sm" ? "w-3 h-3" : "w-4 h-4"} bg-gray-200 rounded animate-pulse`}
+              className={`${
+                size === "sm" ? "w-3 h-3" : "w-4 h-4"
+              } bg-gray-200 rounded animate-pulse`}
             />
           ))}
         </div>
@@ -59,7 +68,9 @@ export default function BookRating({ bookId, showCount = true, size = "sm" }: Bo
   if (ratingData.totalReviews === 0) {
     return (
       <div className="flex items-center space-x-1 text-gray-400">
-        <span className={`${size === "sm" ? "text-xs" : "text-sm"}`}>No reviews yet</span>
+        <span className={`${size === "sm" ? "text-xs" : "text-sm"}`}>
+          No reviews yet
+        </span>
       </div>
     );
   }
