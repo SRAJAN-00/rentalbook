@@ -12,6 +12,7 @@ export default function BooksPage() {
   const router = useRouter();
   const [initialBooks, setInitialBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -25,17 +26,32 @@ export default function BooksPage() {
     async function fetchBooksData() {
       if (session) {
         try {
-          // Use Promise.all to fetch books and favorites simultaneously for better performance
+          // Use relative API paths for deployment compatibility
           const [booksResponse] = await Promise.all([
-            fetch("/api/books"),
-            fetch("/api/fav"),
+            fetch("/api/books", {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }),
+            fetch("/api/fav", {
+              method: "GET", 
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }),
           ]);
 
           if (booksResponse.ok) {
             const booksResult = await booksResponse.json();
             if (booksResult.success) {
               setInitialBooks(booksResult.data);
+              console.log(`Successfully loaded ${booksResult.data.length} books from Vercel`);
+            } else {
+              console.error("API returned error:", booksResult.message);
             }
+          } else {
+            console.error("Failed to fetch books:", booksResponse.status, booksResponse.statusText);
           }
 
           // The favorites data will be handled by the useFavorites hook,

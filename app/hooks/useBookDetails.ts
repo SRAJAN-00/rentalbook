@@ -49,14 +49,9 @@ interface UseBookDetailsOptions {
 // Function to fetch a single book by ID
 async function getBook(id: string): Promise<Book | null> {
   try {
-    const response = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
-      }/api/books`,
-      {
-        cache: "no-store",
-      }
-    );
+    const response = await fetch("/api/books", {
+      cache: "no-store",
+    });
     const result = await response.json();
 
     if (result.success) {
