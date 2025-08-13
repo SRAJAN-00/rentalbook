@@ -51,13 +51,17 @@ export default function BooksPage() {
               console.error("API returned error:", booksResult.message);
             }
           } else {
-            console.error("Failed to fetch books:", booksResponse.status, booksResponse.statusText);
+            const errorMsg = `Failed to fetch books: ${booksResponse.status} ${booksResponse.statusText}`;
+            console.error(errorMsg);
+            setError(errorMsg);
           }
 
           // The favorites data will be handled by the useFavorites hook,
           // but this parallel fetch helps warm up the cache
         } catch (error) {
-          console.error("Error fetching books data:", error);
+          const errorMsg = `Error fetching books data: ${error}`;
+          console.error(errorMsg);
+          setError(errorMsg);
         } finally {
           setLoading(false);
         }
@@ -147,6 +151,26 @@ export default function BooksPage() {
               <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce delay-100"></div>
               <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce delay-200"></div>
             </div>
+          </div>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center py-16">
+          <div className="text-center max-w-md">
+            <div className="mb-6">
+              <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-3xl">⚠️</span>
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-red-800 mb-2">
+              Error Loading Books
+            </h3>
+            <p className="text-red-600 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              Try Again
+            </button>
           </div>
         </div>
       ) : (
