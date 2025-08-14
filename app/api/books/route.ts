@@ -20,6 +20,11 @@ export async function GET() {
     await connectDB();
     const books = await Book.find({}).sort({ createdAt: -1 });
 
+    // Debug: Log the first book to see what fields are returned
+    if (books.length > 0) {
+      console.log("Sample book data:", JSON.stringify(books[0], null, 2));
+    }
+
     return NextResponse.json(
       {
         success: true,

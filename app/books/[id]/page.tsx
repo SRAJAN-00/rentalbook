@@ -245,7 +245,7 @@ export default function BookDetailsPage({
                 </div>
 
                 {/* Compact Stats Cards */}
-                <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-3 sm:p-4 border border-green-200/50">
                     <div className="flex items-center space-x-2">
                       <div className="w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -278,16 +278,51 @@ export default function BookDetailsPage({
                       </div>
                     </div>
                   </div>
+                  <div className="bg-gradient-to-br from-orange-50 to-amber-100 rounded-xl p-3 sm:p-4 border border-orange-200/50">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-xs sm:text-sm">
+                          💰
+                        </span>
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-xs font-semibold text-orange-700 mb-0.5 truncate">
+                          Rent/Day
+                        </h3>
+                        <p className="text-lg sm:text-xl font-bold text-orange-800">
+                          ${book.rentalPrice}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  {book.purchasePrice && (
+                    <div className="bg-gradient-to-br from-purple-50 to-violet-100 rounded-xl p-3 sm:p-4 border border-purple-200/50">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <span className="text-white text-xs sm:text-sm">
+                            🛒
+                          </span>
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="text-xs font-semibold text-purple-700 mb-0.5 truncate">
+                            Buy Price
+                          </h3>
+                          <p className="text-lg sm:text-xl font-bold text-purple-800">
+                            ${book.purchasePrice}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 {/* Compact Action Buttons */}
-                <div className="flex flex-col gap-3 max-w-20">
+                <div className="flex gap-3  ">
                   {isAvailable && !isRented ? (
                     <>
                       <Button
                         href={`/books/${book._id}/rent`}
                         variant="primary"
                         size="md"
-                        className="px-6 py-3 text-sm font-semibold rounded-xl hover:scale-105 transition-all duration-200 w-full sm:w-auto"
                       >
                         📚 Rent This Book
                       </Button>

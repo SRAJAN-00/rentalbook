@@ -9,6 +9,8 @@ export const dummyBooks = [
     publishedYear: 1925,
     totalCopies: 5,
     availableCopies: 3,
+    rentalPrice: 2.99,
+    purchasePrice: 12.99,
     imageUrl:
       "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
   },
@@ -22,6 +24,8 @@ export const dummyBooks = [
     publishedYear: 1960,
     totalCopies: 4,
     availableCopies: 2,
+    rentalPrice: 3.49,
+    purchasePrice: 14.99,
     imageUrl:
       "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
   },
@@ -35,6 +39,8 @@ export const dummyBooks = [
     publishedYear: 1949,
     totalCopies: 6,
     availableCopies: 4,
+    rentalPrice: 2.99,
+    purchasePrice: 13.99,
     imageUrl:
       "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=400&h=600&fit=crop",
   },
@@ -48,6 +54,8 @@ export const dummyBooks = [
     publishedYear: 1813,
     totalCopies: 3,
     availableCopies: 1,
+    rentalPrice: 2.49,
+    purchasePrice: 11.99,
     imageUrl:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
   },
@@ -61,6 +69,8 @@ export const dummyBooks = [
     publishedYear: 1951,
     totalCopies: 4,
     availableCopies: 4,
+    rentalPrice: 3.29,
+    purchasePrice: 15.99,
     imageUrl:
       "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",
   },
@@ -74,6 +84,8 @@ export const dummyBooks = [
     publishedYear: 1997,
     totalCopies: 8,
     availableCopies: 5,
+    rentalPrice: 4.99,
+    purchasePrice: 19.99,
     imageUrl:
       "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400&h=600&fit=crop",
   },
@@ -87,6 +99,8 @@ export const dummyBooks = [
     publishedYear: 1954,
     totalCopies: 6,
     availableCopies: 3,
+    rentalPrice: 4.49,
+    purchasePrice: 18.99,
     imageUrl:
       "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=600&fit=crop",
   },
@@ -100,6 +114,8 @@ export const dummyBooks = [
     publishedYear: 2008,
     totalCopies: 7,
     availableCopies: 4,
+    rentalPrice: 3.99,
+    purchasePrice: 16.99,
     imageUrl:
       "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=600&fit=crop",
   },
@@ -113,6 +129,8 @@ export const dummyBooks = [
     publishedYear: 1965,
     totalCopies: 5,
     availableCopies: 2,
+    rentalPrice: 4.99,
+    purchasePrice: 22.99,
     imageUrl:
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=600&fit=crop",
   },
@@ -126,6 +144,8 @@ export const dummyBooks = [
     publishedYear: 1988,
     totalCopies: 4,
     availableCopies: 3,
+    rentalPrice: 3.49,
+    purchasePrice: 14.99,
     imageUrl:
       "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
   },
@@ -139,6 +159,8 @@ export const dummyBooks = [
     publishedYear: 2005,
     totalCopies: 5,
     availableCopies: 2,
+    rentalPrice: 3.79,
+    purchasePrice: 16.99,
     imageUrl:
       "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop",
   },
@@ -152,6 +174,8 @@ export const dummyBooks = [
     publishedYear: 2018,
     totalCopies: 4,
     availableCopies: 4,
+    rentalPrice: 4.29,
+    purchasePrice: 19.99,
     imageUrl:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
   },
@@ -165,6 +189,8 @@ export const dummyBooks = [
     publishedYear: 2020,
     totalCopies: 6,
     availableCopies: 5,
+    rentalPrice: 3.99,
+    purchasePrice: 17.99,
     imageUrl:
       "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=600&fit=crop",
   },
@@ -178,6 +204,8 @@ export const dummyBooks = [
     publishedYear: 2014,
     totalCopies: 5,
     availableCopies: 3,
+    rentalPrice: 4.49,
+    purchasePrice: 21.99,
     imageUrl:
       "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&h=600&fit=crop",
   },
@@ -191,6 +219,8 @@ export const dummyBooks = [
     publishedYear: 2019,
     totalCopies: 5,
     availableCopies: 1,
+    rentalPrice: 3.99,
+    purchasePrice: 16.99,
     imageUrl:
       "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=400&h=600&fit=crop",
   },
@@ -204,6 +234,8 @@ export const dummyBooks = [
     publishedYear: 2018,
     totalCopies: 7,
     availableCopies: 6,
+    rentalPrice: 2.99,
+    purchasePrice: 15.99,
     imageUrl:
       "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop",
   },
@@ -217,6 +249,8 @@ export const dummyBooks = [
     publishedYear: 2018,
     totalCopies: 6,
     availableCopies: 3,
+    rentalPrice: 3.49,
+    purchasePrice: 17.99,
     imageUrl:
       "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=400&h=600&fit=crop",
   },
@@ -230,6 +264,8 @@ export const dummyBooks = [
     publishedYear: 2017,
     totalCopies: 5,
     availableCopies: 2,
+    rentalPrice: 3.79,
+    purchasePrice: 18.99,
     imageUrl:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop",
   },

@@ -14,6 +14,8 @@ interface Book {
   availableCopies: number;
   totalCopies: number;
   imageUrl?: string;
+  rentalPrice: number;
+  purchasePrice?: number;
 }
 
 interface BookCardProps {
@@ -100,6 +102,28 @@ export default function BookCard({
         {/* Rating */}
         <div className="mb-3">
           <BookRating bookId={book._id} size="sm" />
+        </div>
+
+        {/* Pricing */}
+        <div className="mb-3 p-2 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-100">
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-orange-700 font-medium">
+              💰 Rent/day:
+            </span>
+            <span className="text-sm font-bold text-orange-800">
+              ${book.rentalPrice}
+            </span>
+          </div>
+          {book.purchasePrice && (
+            <div className="flex justify-between items-center mt-1">
+              <span className="text-xs text-purple-700 font-medium">
+                🛒 Buy:
+              </span>
+              <span className="text-sm font-bold text-purple-800">
+                ${book.purchasePrice}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Bottom Section */}

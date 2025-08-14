@@ -26,28 +26,17 @@ export default function RentBookPage({
   }, [params]);
 
   // Use the book details hook
-  const {
-    book,
-    isRented,
-    isAvailable,
-    loading,
-    error,
-    isAuthenticated,
-  } = useBookDetails(bookId);
+  const { book, isRented, isAvailable, loading, error, isAuthenticated } =
+    useBookDetails(bookId);
 
   // Use rental hook
-  const {
-    renterName,
-    setRenterName,
-    renterEmail,
-    setRenterEmail,
-    isRenting,
-  } = useRental({
-    onRentalSuccess: () => {
-      // Redirect back to book details
-      router.push(`/books/${bookId}`);
-    },
-  });
+  const { renterName, setRenterName, renterEmail, setRenterEmail, isRenting } =
+    useRental({
+      onRentalSuccess: () => {
+        // Redirect back to book details
+        router.push(`/books/${bookId}`);
+      },
+    });
 
   // Custom submit handler that includes the bookId
   const handleSubmitWithBookId = async (e: React.FormEvent) => {
@@ -86,7 +75,7 @@ export default function RentBookPage({
   if (loading) {
     return (
       <DashboardLayout title="Rent Book">
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <div className="bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center py-20">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading book details...</p>
@@ -103,7 +92,7 @@ export default function RentBookPage({
   if (error || !book) {
     return (
       <DashboardLayout title="Rent Book">
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <div className="bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center py-20">
           <div className="text-center">
             <div className="text-6xl mb-4">📚</div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -122,7 +111,7 @@ export default function RentBookPage({
   if (!isAvailable || isRented) {
     return (
       <DashboardLayout title="Rent Book">
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <div className="bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center py-20">
           <div className="text-center">
             <div className="text-6xl mb-4">❌</div>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -147,8 +136,8 @@ export default function RentBookPage({
 
   return (
     <DashboardLayout title="Rent Book">
-      <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-gray-50 py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Simple Header */}
           <div className="text-center mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
@@ -159,16 +148,16 @@ export default function RentBookPage({
             </p>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="bg-white block rounded-lg shadow-md overflow-hidden">
             <div className="p-4 sm:p-6 lg:p-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1  gap-6 lg:gap-8">
                 {/* Book Information */}
                 <div className="space-y-6">
                   <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                     Book Details
                   </h2>
-                  
-                  <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
+
+                  <div className="flex  sm:flex-row sm:items-start space-y-8 pr-5 sm:space-y-0 sm:space-x-4">
                     <div className="flex-shrink-0 mx-auto sm:mx-0">
                       {book.imageUrl ? (
                         <Image
@@ -184,7 +173,7 @@ export default function RentBookPage({
                         </div>
                       )}
                     </div>
-                    <div className="flex-1 text-center sm:text-left">
+                    <div className="  sm:text-left">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {book.title}
                       </h3>
@@ -203,10 +192,39 @@ export default function RentBookPage({
                     </div>
                   </div>
 
+                  {/* Pricing Info */}
+                  <div className="bg-orange-50 rounded-lg p-4">
+                    <h4 className="font-medium text-orange-900 mb-3">
+                      💰 Pricing
+                    </h4>
+                    <div className="space-y-2 text-sm text-orange-800">
+                      <div className="flex justify-between items-center">
+                        <span>Rental Rate (per day):</span>
+                        <span className="font-semibold">
+                          ${book.rentalPrice}
+                        </span>
+                      </div>
+                      {book.purchasePrice && (
+                        <div className="flex justify-between items-center">
+                          <span>Purchase Price:</span>
+                          <span className="font-semibold">
+                            ${book.purchasePrice}
+                          </span>
+                        </div>
+                      )}
+                      <div className="pt-2 border-t border-orange-200">
+                        <div className="flex justify-between items-center font-semibold">
+                          <span>14-day rental total:</span>
+                          <span>${(book.rentalPrice * 14).toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Rental Terms */}
                   <div className="bg-blue-50 rounded-lg p-4">
                     <h4 className="font-medium text-blue-900 mb-3">
-                      Rental Terms
+                      📋 Rental Terms
                     </h4>
                     <ul className="space-y-2 text-sm text-blue-800">
                       <li>• 14-day rental period</li>
@@ -232,7 +250,7 @@ export default function RentBookPage({
                   <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                     Your Information
                   </h2>
-                  
+
                   <form onSubmit={handleSubmitWithBookId} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">

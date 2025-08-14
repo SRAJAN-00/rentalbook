@@ -10,6 +10,8 @@ export interface IBook extends Document {
   totalCopies: number;
   availableCopies: number;
   imageUrl?: string;
+  rentalPrice: number; // Price per day
+  purchasePrice?: number; // Optional purchase price
   createdAt: Date;
   updatedAt: Date;
 }
@@ -58,6 +60,15 @@ const BookSchema = new Schema<IBook>(
     imageUrl: {
       type: String,
       default: "",
+    },
+    rentalPrice: {
+      type: Number,
+      required: [true, "Rental price is required"],
+      min: 0,
+    },
+    purchasePrice: {
+      type: Number,
+      min: 0,
     },
   },
   {

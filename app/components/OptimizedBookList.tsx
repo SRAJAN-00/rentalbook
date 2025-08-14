@@ -17,6 +17,8 @@ interface Book {
   availableCopies: number;
   totalCopies: number;
   imageUrl?: string;
+  rentalPrice: number;
+  purchasePrice?: number;
 }
 
 interface OptimizedBookListProps {
