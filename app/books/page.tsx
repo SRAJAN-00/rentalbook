@@ -35,7 +35,7 @@ export default function BooksPage() {
               },
             }),
             fetch("/api/fav", {
-              method: "GET", 
+              method: "GET",
               headers: {
                 "Content-Type": "application/json",
               },
@@ -46,7 +46,9 @@ export default function BooksPage() {
             const booksResult = await booksResponse.json();
             if (booksResult.success) {
               setInitialBooks(booksResult.data);
-              console.log(`Successfully loaded ${booksResult.data.length} books from Vercel`);
+              console.log(
+                `Successfully loaded ${booksResult.data.length} books from Vercel`
+              );
             } else {
               console.error("API returned error:", booksResult.message);
             }

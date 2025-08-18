@@ -8,7 +8,7 @@ interface Book {
   author: string;
   rentalPrice?: number;
   purchasePrice?: number;
-  [key: string]: any;
+  [key: string]: string | number | boolean | undefined;
 }
 
 export default function DebugBooksPage() {

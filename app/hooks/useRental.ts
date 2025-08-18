@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import toast from "react-hot-toast";
 
 interface UseRentalOptions {
   onRentalSuccess?: () => void; // Optional callback after successful rental
@@ -35,7 +36,7 @@ export const useRental = (options?: UseRentalOptions) => {
       if (e) e.preventDefault();
 
       if (!selectedBookId || !renterName || !renterEmail) {
-        alert("Please fill in all fields");
+        toast.error("Please fill in all fields");
         return;
       }
 
@@ -54,7 +55,7 @@ export const useRental = (options?: UseRentalOptions) => {
         const result = await response.json();
 
         if (result.success) {
-          alert("Book rented successfully!");
+          toast.success("Book rented successfully! 📚");
           setShowRentModal(false);
           setRenterName("");
           setRenterEmail("");
@@ -65,11 +66,11 @@ export const useRental = (options?: UseRentalOptions) => {
             options.onRentalSuccess();
           }
         } else {
-          alert(result.error || "Failed to rent book");
+          toast.error(result.error || "Failed to rent book");
         }
       } catch (error) {
         console.error("Error renting book:", error);
-        alert("Error renting book. Please try again.");
+        toast.error("Error renting book. Please try again.");
       } finally {
         setIsRenting(false);
       }
@@ -93,18 +94,18 @@ export const useRental = (options?: UseRentalOptions) => {
         const result = await response.json();
 
         if (response.ok && result.success) {
-          alert("Book returned successfully!");
+          toast.success("Book returned successfully! ✅");
 
           // Call optional success callback
           if (options?.onReturnSuccess) {
             options.onReturnSuccess();
           }
         } else {
-          alert(result.error || "Failed to return book");
+          toast.error(result.error || "Failed to return book");
         }
       } catch (error) {
         console.error("Error returning book:", error);
-        alert("Error returning book. Please try again.");
+        toast.error("Error returning book. Please try again.");
       } finally {
         setIsReturning(false);
       }

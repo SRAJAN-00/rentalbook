@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRental } from "../../../hooks/useRental";
 import { useBookDetails } from "../../../hooks/useBookDetails";
+import toast from "react-hot-toast";
 import Button from "../../../components/ModernButton";
 import DashboardLayout from "@/app/components/DashboardLayout";
+import { LoadingState } from "../../../components/Loading";
 import Image from "next/image";
 
 export default function RentBookPage({
@@ -43,7 +45,7 @@ export default function RentBookPage({
     e.preventDefault();
 
     if (!bookId || !renterName || !renterEmail) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -61,26 +63,21 @@ export default function RentBookPage({
       const result = await response.json();
 
       if (result.success) {
-        alert("Book rented successfully!");
+        toast.success("Book rented successfully! 📚");
         // Redirect back to book details
         router.push(`/books/${bookId}`);
       } else {
-        alert(result.error || "Failed to rent book");
+        toast.error(result.error || "Failed to rent book");
       }
     } catch {
-      alert("Error renting book");
+      toast.error("Error renting book. Please try again.");
     }
   };
 
   if (loading) {
     return (
       <DashboardLayout title="Rent Book">
-        <div className="bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center py-20">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading book details...</p>
-          </div>
-        </div>
+        <LoadingState message="Loading book details..." />
       </DashboardLayout>
     );
   }
@@ -150,14 +147,14 @@ export default function RentBookPage({
 
           <div className="bg-white block rounded-lg shadow-md overflow-hidden">
             <div className="p-4 sm:p-6 lg:p-8">
-              <div className="grid grid-cols-1  gap-6 lg:gap-8">
+              <div className="grid   gap-6 lg:gap-8">
                 {/* Book Information */}
                 <div className="space-y-6">
                   <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
                     Book Details
                   </h2>
 
-                  <div className="flex  sm:flex-row sm:items-start space-y-8 pr-5 sm:space-y-0 sm:space-x-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start space-y-8 sm:space-y-0 sm:space-x-8 pr-5">
                     <div className="flex-shrink-0 mx-auto sm:mx-0">
                       {book.imageUrl ? (
                         <Image
@@ -173,7 +170,7 @@ export default function RentBookPage({
                         </div>
                       )}
                     </div>
-                    <div className="  sm:text-left">
+                    <div className="flex-1 text-centern p-6 sm:text-left">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
                         {book.title}
                       </h3>
@@ -262,7 +259,7 @@ export default function RentBookPage({
                         onChange={(e) => setRenterName(e.target.value)}
                         required
                         disabled={isRenting}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:text-gray-500"
+                        className="w-full p-3 border border-gray-300 rounded-lg text-neutral-500"
                         placeholder="Enter your full name"
                       />
                     </div>
@@ -277,7 +274,7 @@ export default function RentBookPage({
                         onChange={(e) => setRenterEmail(e.target.value)}
                         required
                         disabled={isRenting}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:text-gray-500"
+                        className="w-full p-3 border text-neutral-500 border-gray-300 rounded-lg"
                         placeholder="Enter your email address"
                       />
                       <p className="text-xs text-gray-500 mt-1">
@@ -299,7 +296,6 @@ export default function RentBookPage({
                         <Button
                           type="submit"
                           variant="primary"
-                          className="w-full sm:flex-1 order-1 sm:order-2"
                           disabled={isRenting}
                         >
                           {isRenting ? "Processing..." : "Rent Book"}

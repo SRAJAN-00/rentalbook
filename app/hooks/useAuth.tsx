@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { LoadingState } from "../components/Loading";
 
 export function useAuthRedirect(redirectTo: string = "/auth/signin") {
   const { data: session, status } = useSession();
@@ -22,11 +23,7 @@ export function useRequireAuth() {
   
   const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     if (isLoading) {
-      return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-        </div>
-      );
+      return <LoadingState fullScreen message="Authenticating..." />;
     }
 
     if (!session) {

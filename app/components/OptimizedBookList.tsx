@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import BookCard from "./BookCard";
 import Button from "./ModernButton";
 import BookFilterSort from "./BookFilterSort";
+import { LoadingSpinner } from "./Loading";
 import { useFavorites } from "../hooks/useFavorites";
 import { useRental } from "../hooks/useRental";
 
@@ -216,7 +217,7 @@ export default function OptimizedBookList({
         </div>
         {loading && (
           <div className="flex items-center text-sm text-gray-500">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+            <LoadingSpinner size="sm" className="mr-2" />
             Refreshing...
           </div>
         )}

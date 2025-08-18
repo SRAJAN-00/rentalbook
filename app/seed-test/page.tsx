@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function SeedTest() {
   const [isLoading, setIsLoading] = useState(false);
@@ -185,20 +186,20 @@ export default function SeedTest() {
               💡 Instructions:
             </h3>
             <ol className="list-decimal list-inside space-y-2 text-blue-800">
-              <li>Use <strong>"Full Reset"</strong> for the easiest one-click solution</li>
-              <li>Or manually: First click <strong>"Delete All Books"</strong></li>
-              <li>Then click <strong>"Seed Books"</strong> to add books with pricing</li>
-              <li>After seeding, go to <a href="/books" className="underline font-semibold">Books Page</a> to see pricing</li>
+              <li>Use <strong>&quot;Full Reset&quot;</strong> for the easiest one-click solution</li>
+              <li>Or manually: First click <strong>&quot;Delete All Books&quot;</strong></li>
+              <li>Then click <strong>&quot;Seed Books&quot;</strong> to add books with pricing</li>
+              <li>After seeding, go to <Link href="/books" className="underline font-semibold">Books Page</Link> to see pricing</li>
             </ol>
           </div>
 
           <div className="mt-6 flex justify-center">
-            <a 
+            <Link 
               href="/books" 
               className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
             >
               📖 Go to Books Page
-            </a>
+            </Link>
           </div>
         </div>
       </div>
