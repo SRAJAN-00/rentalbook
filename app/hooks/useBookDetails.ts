@@ -48,17 +48,16 @@ interface UseBookDetailsOptions {
   onRentalStatusChange?: (isRented: boolean) => void; // Optional callback when rental status changes
 }
 
-// Function to fetch a single book by ID
+// Function to fetch a single book by ID (optimized)
 async function getBook(id: string): Promise<Book | null> {
   try {
-    const response = await fetch("/api/books", {
+    const response = await fetch(`/api/books?id=${id}`, {
       cache: "no-store",
     });
     const result = await response.json();
 
     if (result.success) {
-      const book = result.data.find((book: Book) => book._id === id);
-      return book || null;
+      return result.data || null;
     }
     return null;
   } catch (error) {

@@ -90,7 +90,9 @@ export default function DashboardLayout({
             </button>
 
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+              <h1 className="lg:text-2xl md:pt-5 font-bold text-gray-900">
+                {title}
+              </h1>
             </div>
           </div>
 

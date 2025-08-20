@@ -3,7 +3,6 @@ import BookCard from "@/app/components/BookCard";
 import Button from "@/app/components/ModernButton";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useFavorites } from "@/app/hooks/useFavorites";
 
 interface Book {
@@ -20,42 +19,14 @@ interface Book {
   purchasePrice?: number;
 }
 
-interface FavoriteItem {
-  bookId: Book;
-}
-
 export default function FavoritesPage() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Use the custom favorites hook with callback to remove books from display
-  const { favoriteIds, handleToggleFavorite } = useFavorites({
-    onRemove: (bookId: string) => {
-      setBooks((prev) => prev.filter((book) => book._id !== bookId));
-    },
-  });
-
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/fav");
-        const result = await response.json();
-        if (response.ok && Array.isArray(result.data)) {
-          // result.data is an array of Fav objects with populated bookId
-          const favoriteBooks = result.data.map((fav: FavoriteItem) => fav.bookId);
-          setBooks(favoriteBooks);
-        } else {
-          console.error("Failed to fetch favorites:", result.error);
-        }
-      } catch (error) {
-        console.error("Error fetching favorites:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchFavorites();
-  }, []);
+  // Use the enhanced favorites hook - no more redundant fetching!
+  const {
+    favoriteBooks,
+    favoriteIds,
+    isLoadingFavorites,
+    handleToggleFavorite,
+  } = useFavorites();
 
   return (
     <DashboardLayout title="Your Favorite Books">
@@ -64,14 +35,14 @@ export default function FavoritesPage() {
           {/* Header Section */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-3 mb-4">
-              <div className="p-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-full shadow-lg animate-pulse">
+              <div className="">
                 <span className="text-2xl">💖</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-600 via-red-500 to-purple-600 bg-clip-text text-transparent animate-gradient">
+              <h1 className="lg:text-4xl text-2xl md:text-lg  font-bold bg-gradient-to-r from-pink-600 via-red-500 to-purple-600 bg-clip-text text-transparent animate-gradient">
                 Your Favorite Books
               </h1>
             </div>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-600 text-sm lg:text-lg max-w-2xl mx-auto leading-relaxed">
               Discover and manage your collection of beloved books. Each story
               that captured your heart lives here.
             </p>
@@ -82,23 +53,29 @@ export default function FavoritesPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="text-3xl font-bold text-pink-600">
-                  {loading ? "..." : books.length}
+                  {isLoadingFavorites ? "..." : favoriteBooks.length}
                 </div>
                 <div className="text-gray-600 font-medium">Favorite Books</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-blue-600">
-                  {loading
+                  {isLoadingFavorites
                     ? "..."
-                    : books.filter((book) => book.availableCopies > 0).length}
+                    : favoriteBooks.filter(
+                        (book: Book) => book.availableCopies > 0
+                      ).length}
                 </div>
                 <div className="text-gray-600 font-medium">Available Now</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">
-                  {loading
+                  {isLoadingFavorites
                     ? "..."
-                    : [...new Set(books.map((book) => book.genre))].length}
+                    : [
+                        ...new Set(
+                          favoriteBooks.map((book: Book) => book.genre)
+                        ),
+                      ].length}
                 </div>
                 <div className="text-gray-600 font-medium">Genres</div>
               </div>
@@ -106,7 +83,7 @@ export default function FavoritesPage() {
           </div>
 
           {/* Books Grid */}
-          {loading ? (
+          {isLoadingFavorites ? (
             // Loading skeleton
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
@@ -130,7 +107,7 @@ export default function FavoritesPage() {
                 </div>
               ))}
             </div>
-          ) : books.length === 0 ? (
+          ) : favoriteBooks.length === 0 ? (
             <div className="text-center py-20">
               <div className="text-8xl mb-6">💔</div>
               <h3 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -150,7 +127,7 @@ export default function FavoritesPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {books.map((book, idx) => (
+              {favoriteBooks.map((book: Book, idx: number) => (
                 <Link
                   key={book._id || idx}
                   href={`/books/${book._id}`}

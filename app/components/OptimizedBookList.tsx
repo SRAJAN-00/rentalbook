@@ -50,13 +50,20 @@ export default function OptimizedBookList({
   });
 
   const [books, setBooks] = useState<Book[]>(initialBooks); // ← Start with server data
-  const [loading, setLoading] = useState(false); // ← No initial loading!
+  const [loading, setLoading] = useState(initialBooks.length === 0); // ← Loading if no initial data
   const [error, setError] = useState("");
   const [genreFilter, setGenreFilter] = useState("");
   const [availabilityFilter, setAvailabilityFilter] = useState("");
   const [sortBy, setSortBy] = useState("title");
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
+  // Fetch books if no initial data provided
+  useEffect(() => {
+    if (initialBooks.length === 0) {
+      refreshBooks();
+    }
+  }, []);
 
   // Debounce search term for better performance
   useEffect(() => {

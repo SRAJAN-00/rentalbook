@@ -6,6 +6,7 @@ import Image from "next/image";
 import Button from "../../components/ModernButton";
 import Reviews from "@/app/components/Reviews";
 import BookRating from "@/app/components/BookRating";
+import LoadingState from "@/app/components/Loading";
 import { useRental } from "../../hooks/useRental";
 import { useBookDetails } from "../../hooks/useBookDetails";
 import { useRecent } from "../../hooks/useRecent";
@@ -60,60 +61,12 @@ export default function BookDetailsPage({
   if (loading) {
     return (
       <DashboardLayout title="Loading...">
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
-          <div className="text-center max-w-md mx-auto">
-            {/* Enhanced Animated Book Icon */}
-            <div className="relative mb-8">
-              <div className="w-32 h-32 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
-                <span className="text-6xl animate-bounce">📚</span>
-              </div>
-              {/* Enhanced floating particles */}
-              <div className="absolute -top-3 -right-3 w-5 h-5 bg-blue-400 rounded-full animate-ping"></div>
-              <div className="absolute -bottom-3 -left-3 w-4 h-4 bg-purple-400 rounded-full animate-ping delay-150"></div>
-              <div className="absolute top-1/2 -right-5 w-3 h-3 bg-indigo-400 rounded-full animate-ping delay-300"></div>
-              <div className="absolute bottom-1/4 -left-4 w-2 h-2 bg-pink-400 rounded-full animate-ping delay-500"></div>
-
-              {/* Rotating ring */}
-              <div className="absolute inset-0 border-4 border-transparent border-t-blue-300 rounded-full animate-spin"></div>
-              <div className="absolute inset-2 border-2 border-transparent border-b-purple-300 rounded-full animate-spin animation-direction-reverse"></div>
-            </div>
-
-            {/* Enhanced Loading Text */}
-            <div className="space-y-4">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-800 via-blue-700 to-purple-700 bg-clip-text text-transparent">
-                Loading Book Details
-              </h2>
-              <p className="text-gray-600 text-lg font-medium">
-                Please wait while we fetch the information...
-              </p>
-
-              {/* Enhanced Progress Dots */}
-              <div className="flex justify-center space-x-3 mt-8">
-                <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full animate-bounce shadow-lg"></div>
-                <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full animate-bounce delay-100 shadow-lg"></div>
-                <div className="w-4 h-4 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full animate-bounce delay-200 shadow-lg"></div>
-                <div className="w-4 h-4 bg-gradient-to-r from-pink-500 to-pink-600 rounded-full animate-bounce delay-300 shadow-lg"></div>
-              </div>
-            </div>
-
-            {/* Enhanced Loading Bar */}
-            <div className="mt-10 w-80 max-w-full mx-auto">
-              <div className="h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-                <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 rounded-full animate-pulse shadow-sm"></div>
-              </div>
-              <p className="text-sm text-gray-500 mt-3 font-medium">
-                Preparing your reading experience...
-              </p>
-            </div>
-
-            {/* Loading skeleton preview */}
-            <div className="mt-12 space-y-4 opacity-30">
-              <div className="h-4 bg-gray-300 rounded-full animate-pulse"></div>
-              <div className="h-4 bg-gray-300 rounded-full animate-pulse delay-100"></div>
-              <div className="h-4 bg-gray-300 rounded-full w-3/4 mx-auto animate-pulse delay-200"></div>
-            </div>
-          </div>
-        </div>
+        <LoadingState 
+          message="Loading book details, please wait..."
+          size="lg"
+          color="blue"
+          fullScreen={true}
+        />
       </DashboardLayout>
     );
   }

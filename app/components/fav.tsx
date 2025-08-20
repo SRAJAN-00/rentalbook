@@ -3,15 +3,16 @@
 interface FavProps {
   bookId?: string;
   isFavorite: boolean;
-  onToggle: (bookId: string, isFav: boolean) => void;
+  onToggle: (bookId: string, isFav: boolean) => Promise<void>;
 }
 
 const Fav = ({ bookId, isFavorite, onToggle }: FavProps) => {
-  const handleFavClick = (e: React.MouseEvent) => {
+  const handleFavClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (!bookId) return;
-    onToggle(bookId, isFavorite);
+
+    await onToggle(bookId, isFavorite);
   };
 
   return (
@@ -20,12 +21,7 @@ const Fav = ({ bookId, isFavorite, onToggle }: FavProps) => {
       aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       className={`
         group relative top-[-4px] rounded-full transition-all duration-200 
-        ${
-          isFavorite
-            ? " hover:bg-white hover:shadow-xl"
-            : " hover:bg-white/90  hover:shadow-lg"
-        }
-         
+       
         transform hover:scale-110 active:scale-95
       `}
     >

@@ -119,14 +119,26 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
         {/* Header */}
         <div className="flex items-center justify-between p-6 h-15 bg-white border-b border-r rounded-t-xl border-gray-300">
           <div className="flex items-center space-x-3">
-            <div className="w-6 h-6  rounded-sm flex items-center justify-center">
-              <span className="text-white text-sm font-bold">R</span>
+            {/* Logo */}
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" />
+              </svg>
             </div>
-            <span className="text-xl font-bold text-gray-900">RentalBook</span>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-gray-900 leading-tight">
+                RentalBook
+              </span>
+            </div>
           </div>
-          <button
+          <motion.button
+            whileTap={{ scale: 0.9, rotate: 90 }}
             onClick={onToggle}
-            className="lg:hidden p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
+            className="lg:hidden p-2 ml-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
           >
             <svg
               className="w-5 h-5"
@@ -141,7 +153,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
+          </motion.button>
         </div>
 
         {/* Navigation */}
@@ -172,7 +184,7 @@ export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
                   href={item.href}
                   className={`flex items-center group relative text-gray-700 space-x-3 px-2 py-1 rounded-xl z-10 ${
                     isActive
-                      ? "bg-blue-50 text-blue-700 border-l-4 border-blue-700"
+                      ? "bg-blue-100 text-blue-700 border-l-4 border-blue-700"
                       : ""
                   }`}
                   onClick={() => {
