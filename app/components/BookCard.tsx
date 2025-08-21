@@ -21,7 +21,7 @@ interface Book {
 interface BookCardProps {
   book: Book;
   isFavorite?: boolean;
-  onToggleFavorite?: (bookId: string, isFav: boolean) => void;
+  onToggleFavorite?: (bookId: string, isFav: boolean) => void | Promise<void>;
 }
 
 export default function BookCard({
@@ -71,7 +71,11 @@ export default function BookCard({
           <Fav
             bookId={book._id}
             isFavorite={isFavorite}
-            onToggle={onToggleFavorite || (() => {})}
+            onToggle={async (bookId: string, isFav: boolean) => {
+              if (onToggleFavorite) {
+                await onToggleFavorite(bookId, isFav);
+              }
+            }}
           />
         </div>
 

@@ -58,24 +58,8 @@ export default function OptimizedBookList({
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  // Fetch books if no initial data provided
-  useEffect(() => {
-    if (initialBooks.length === 0) {
-      refreshBooks();
-    }
-  }, []);
-
-  // Debounce search term for better performance
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
   // Only refresh data when needed (not on initial load)
-  const refreshBooks = async () => {
+  const refreshBooks = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch("/api/books");
@@ -88,7 +72,23 @@ export default function OptimizedBookList({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Fetch books if no initial data provided
+  useEffect(() => {
+    if (initialBooks.length === 0) {
+      refreshBooks();
+    }
+  }, [initialBooks.length, refreshBooks]);
+
+  // Debounce search term for better performance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Get unique genres for filter dropdown (memoized)
   const availableGenres = useMemo(

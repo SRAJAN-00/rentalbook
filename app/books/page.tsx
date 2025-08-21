@@ -2,10 +2,9 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import OptimizedBookList from "../components/OptimizedBookList";
 import DashboardLayout from "../components/DashboardLayout";
-import LoadingState from "../components/Loading";
 
 // Client-side component for better authentication handling
 export default function BooksPage() {
@@ -20,15 +19,7 @@ export default function BooksPage() {
   }, [status, router]);
 
   // Show loading while checking authentication
-  if (status === "loading") {
-    return (
-      <LoadingState 
-        message="Checking authentication..."
-        size="lg"
-        color="blue"
-      />
-    );
-  }
+
 
   // Don't render anything if not authenticated (will redirect)
   if (!session) {
