@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { dummyBooks } from "../../data/books";
 import BookCover from "./BookCover";
@@ -20,6 +21,29 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
       <Hero />
+
+      <section className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl">
+          <div className="flex items-center gap-3 border-b border-slate-200 bg-slate-900 px-5 py-3">
+            <span className="h-3 w-3 rounded-full bg-red-400" />
+            <span className="h-3 w-3 rounded-full bg-yellow-400" />
+            <span className="h-3 w-3 rounded-full bg-green-400" />
+            <div className="ml-3 rounded-md bg-slate-800 px-3 py-1 text-xs text-slate-300">
+              app.rentalbook.com/dashboard
+            </div>
+          </div>
+          <div className="relative aspect-[16/9] w-full">
+            <Image
+              src="/image.png"
+              alt="RentalBook dashboard preview"
+              fill
+              priority
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              className="object-cover object-top"
+            />
+          </div>
+        </div>
+      </section>
 
       <main>
         <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
