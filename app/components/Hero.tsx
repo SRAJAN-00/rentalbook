@@ -1,86 +1,102 @@
+"use client";
+
 import Button from "./ModernButton";
 import Navbar from "./NavItems";
+import { motion } from "motion/react";
+import { Star, Zap, Smartphone, ShieldCheck } from "lucide-react";
 
 export function Hero() {
   return (
-    <div>
+    <div className="relative overflow-hidden bg-white">
       <Navbar />
-      <div className="text-gray-900 h-[100vh] text-center py-16 flex flex-col justify-center">
-        <div>
-          <div className=" mt-10">
-            <span className="  px-3 py-2 text-neutral-800 shadow-md text-xs rounded-full  bg-neutral-50 inline-flex items-center gap-2">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="#FFD700"
-                stroke="#FFD700"
-                strokeWidth="1"
-              >
-                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-              </svg>
-              Trusted by 10,000+ readers
-            </span>
-          </div>
-        </div>
-        <div className="mt-12">
-          {/* Main Heading */}
-          <h1 className="text-5xl lg:text-7xl font-bold text-neutral-900 mb-6 leading-[80px] [text-shadow:inset_0_1px_2px_rgba(0,0,0,0.1)]">
-            Your Digital
-            <span className="block bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent [text-shadow:inset_0_1px_2px_rgba(0,0,0,0.1)]">
-              Library Awaits 📚
-            </span>
-          </h1>
-          <p className="text-l lg:text-xl text-gray-600 mb-12 max-w-[750px] mx-auto leading-relaxed [text-shadow:inset_0_1px_1px_rgba(0,0,0,0.05)]">
-            Discover, rent, and enjoy thousands of books from our extensive
-            digital collection. Your next great read is just a click away.
-          </p>
 
-          {/* Call to Action Buttons */}
-          <div className="flex gap-4 justify-center flex-wrap mt-8">
+      <div className="relative max-w-7xl mx-auto  px-4 sm:px-6 lg:px-8  lg:py-20">
+        <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-full text-sm font-semibold text-slate-700 mb-8"
+          >
+            <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+            Trusted by 10,000+ readers worldwide
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight
+             leading-[1]"
+          >
+            Rent. Read. Repeat.
+            <span className="block mt-4 text-blue-600 text-shadow-sm">
+              Find your next favorite book.
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="mt-8 text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed"
+          >
+            Thousands of titles across all genres. Rent instantly, read across
+            all your devices, and enjoy a sustainable way of reading. Flexible
+            periods and secure payments.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-10 flex flex-col sm:flex-row gap-4 justify-center w-full"
+          >
             <Button
               href="/books"
               variant="primary"
               size="lg"
-              icon={
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              }
-              iconPosition="right"
+              className="w-full sm:w-auto px-8"
             >
               Browse Books
             </Button>
             <Button
-              href="/dashboard"
-              variant="success"
+              href="/signup"
+              variant="outline"
               size="lg"
-              icon={
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect x="3" y="3" width="7" height="7" />
-                  <rect x="14" y="3" width="7" height="7" />
-                  <rect x="14" y="14" width="7" height="7" />
-                  <rect x="3" y="14" width="7" height="7" />
-                </svg>
-              }
+              className="w-full sm:w-auto px-8"
             >
-              Go to Dashboard
+              Create Account
             </Button>
-          </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="mt-16 flex flex-wrap gap-6 sm:gap-10 justify-center items-center"
+          >
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <Zap className="w-6 h-6 text-blue-600" />
+              </div>
+              <span className="font-medium text-slate-700">Instant Access</span>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <Smartphone className="w-6 h-6 text-blue-600" />
+              </div>
+              <span className="font-medium text-slate-700">Read Anywhere</span>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <ShieldCheck className="w-6 h-6 text-blue-600" />
+              </div>
+              <span className="font-medium text-slate-700">
+                Secure Payments
+              </span>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>
