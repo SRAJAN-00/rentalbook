@@ -15,7 +15,7 @@
     "lucide-react": "^1.14.0",
     "mongoose": "^8.16.1",
     "motion": "^12.23.6",
-    "next": "15.3.5",
+    "next": "15.5.20",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -29,7 +29,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.3.5",
+    "eslint-config-next": "15.5.20",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
