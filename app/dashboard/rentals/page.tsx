@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "../../components/DashboardLayout";
 import Button from "../../components/ModernButton";
-import Image from "next/image";
 import Link from "next/link";
+import BookCover from "../../components/BookCover";
 
 interface RentalDisplay {
   id: string;
@@ -127,18 +127,13 @@ export default function RentalsPage() {
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-4 sm:space-y-0">
                         <div className="flex items-start space-x-3 sm:space-x-5">
-                          <div className="w-16 h-24 sm:w-20 sm:h-28 bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-md overflow-hidden flex-shrink-0">
-                            {rental.bookId?.imageUrl ? (
-                              <Image
-                                src={rental.bookId.imageUrl}
-                                alt={rental.title}
-                                width={80}
-                                height={112}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <span className="text-2xl sm:text-3xl">📚</span>
-                            )}
+                          <div className="w-16 h-24 sm:w-20 sm:h-28 overflow-hidden rounded-lg shadow-md flex-shrink-0">
+                            <BookCover
+                              title={rental.title}
+                              author={rental.author}
+                              genre={rental.genre}
+                              className="w-full h-full rounded-lg"
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-bold text-lg sm:text-xl text-gray-900 mb-1 sm:mb-2 truncate">
@@ -245,18 +240,13 @@ export default function RentalsPage() {
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-4 sm:space-y-0">
                         <div className="flex items-start space-x-3 sm:space-x-5">
-                          <div className="w-16 h-24 sm:w-20 sm:h-28 bg-gradient-to-br from-gray-300 to-gray-500 rounded-lg flex items-center justify-center shadow-md opacity-75 overflow-hidden flex-shrink-0">
-                            {rental.bookId?.imageUrl ? (
-                              <Image
-                                src={rental.bookId.imageUrl}
-                                alt={rental.title}
-                                width={80}
-                                height={112}
-                                className="w-full h-full object-cover opacity-75"
-                              />
-                            ) : (
-                              <span className="text-2xl sm:text-3xl">📚</span>
-                            )}
+                          <div className="w-16 h-24 sm:w-20 sm:h-28 overflow-hidden rounded-lg shadow-md opacity-80 flex-shrink-0">
+                            <BookCover
+                              title={rental.title}
+                              author={rental.author}
+                              genre={rental.genre}
+                              className="w-full h-full rounded-lg"
+                            />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h3 className="font-bold text-lg sm:text-xl text-gray-900 mb-1 sm:mb-2 truncate">

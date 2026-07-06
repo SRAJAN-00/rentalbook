@@ -92,7 +92,7 @@ function ReviewForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError("");;
 
     if (rating === 0) {
       setError("Please select a rating");

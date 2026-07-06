@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Button from "../../components/ModernButton";
 import Reviews from "@/app/components/Reviews";
 import BookRating from "@/app/components/BookRating";
@@ -11,6 +10,7 @@ import { useRental } from "../../hooks/useRental";
 import { useBookDetails } from "../../hooks/useBookDetails";
 import { useRecent } from "../../hooks/useRecent";
 import DashboardLayout from "@/app/components/DashboardLayout";
+import BookCover from "@/app/components/BookCover";
 
 export default function BookDetailsPage({
   params,
@@ -111,25 +111,12 @@ export default function BookDetailsPage({
               {/* Book Image Section - Smaller */}
               <div className="lg:w-1/3 relative">
                 <div className="mx-4 mt-4 sm:mx-6 sm:mt-6 lg:mx-5 lg:mt-10 rounded-lg h-64 sm:h-80 lg:h-96 relative overflow-hidden">
-                  {book.imageUrl ? (
-                    <Image
-                      src={book.imageUrl}
-                      alt={book.title}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-400 via-purple-500 to-indigo-600 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className="text-4xl sm:text-6xl mb-2 sm:mb-3">
-                          📖
-                        </div>
-                        <span className="text-xs sm:text-sm font-medium opacity-90">
-                          No Cover Available
-                        </span>
-                      </div>
-                    </div>
-                  )}
+                  <BookCover
+                    title={book.title}
+                    author={book.author}
+                    genre={book.genre}
+                    className="h-full w-full rounded-lg"
+                  />
 
                   {/* Compact Floating Badge */}
                   <div className="absolute top-2 sm:top-4 right-2 sm:right-4">

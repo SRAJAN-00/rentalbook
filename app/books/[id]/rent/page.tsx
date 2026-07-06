@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import Button from "../../../components/ModernButton";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { LoadingState } from "../../../components/Loading";
-import Image from "next/image";
+import BookCover from "@/app/components/BookCover";
 
 export default function RentBookPage({
   params,
@@ -156,19 +156,12 @@ export default function RentBookPage({
 
                   <div className="flex flex-col sm:flex-row sm:items-start space-y-8 sm:space-y-0 sm:space-x-8 pr-5">
                     <div className="flex-shrink-0 mx-auto sm:mx-0">
-                      {book.imageUrl ? (
-                        <Image
-                          src={book.imageUrl}
-                          alt={book.title}
-                          width={120}
-                          height={160}
-                          className="rounded-lg shadow-sm object-cover"
+                        <BookCover
+                          title={book.title}
+                          author={book.author}
+                          genre={book.genre}
+                          className="w-[120px] h-[160px] rounded-lg shadow-sm"
                         />
-                      ) : (
-                        <div className="w-[120px] h-[160px] bg-gray-200 rounded-lg flex items-center justify-center">
-                          <span className="text-3xl text-gray-400">📚</span>
-                        </div>
-                      )}
                     </div>
                     <div className="flex-1 text-centern p-6 sm:text-left">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">

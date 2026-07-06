@@ -49,7 +49,7 @@ export default function BookCard({
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-indigo-100 via-blue-100 to-purple-100 flex items-center justify-center">
             <div className="text-center">
-              <div className="text-4xl mb-2">�</div>
+              <div className="text-4xl mb-2">📚</div>
               <span className="text-gray-500 text-sm font-medium">
                 No Image
               </span>

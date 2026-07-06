@@ -35,10 +35,7 @@ interface Activity {
 
 export default function DashboardContent() {
   // Animation helper function
-  function enterAnimation(
-    delay: number = 0.3,
-    duration: number = 0.4
-  ) {
+  function enterAnimation(delay: number = 0.3, duration: number = 0.4) {
     return {
       initial: { opacity: 0, x: -10 },
       animate: { opacity: 1, x: 0 },
@@ -70,7 +67,12 @@ export default function DashboardContent() {
             const transformedRentals = data.data.map(
               (rental: {
                 _id: string;
-                bookId: { _id: string; title: string; author: string; imageUrl?: string };
+                bookId: {
+                  _id: string;
+                  title: string;
+                  author: string;
+                  imageUrl?: string;
+                };
                 dueDate: string | number | Date;
                 status: string;
               }) => ({
@@ -81,7 +83,7 @@ export default function DashboardContent() {
                 imageUrl: rental.bookId?.imageUrl || null,
                 dueDate: new Date(rental.dueDate).toLocaleDateString(),
                 status: rental.status,
-              })
+              }),
             );
             return transformedRentals;
           }
@@ -102,14 +104,16 @@ export default function DashboardContent() {
         setProgressStats((prev) => ({
           ...prev,
           currentRentals: rentalsPromise.value.length,
-          completedThisMonth: rentalsPromise.value.filter((rental: RentalDisplay) => {
-            const rentalDate = new Date(rental.dueDate);
-            return (
-              rentalDate.getMonth() === currentMonth &&
-              rentalDate.getFullYear() === currentYear &&
-              rental.status === "completed"
-            );
-          }).length,
+          completedThisMonth: rentalsPromise.value.filter(
+            (rental: RentalDisplay) => {
+              const rentalDate = new Date(rental.dueDate);
+              return (
+                rentalDate.getMonth() === currentMonth &&
+                rentalDate.getFullYear() === currentYear &&
+                rental.status === "completed"
+              );
+            },
+          ).length,
         }));
       } else {
         console.error("Error fetching rentals:", rentalsPromise.reason);
@@ -123,13 +127,15 @@ export default function DashboardContent() {
         // Calculate monthly views from activities
         const currentMonth = new Date().getMonth();
         const currentYear = new Date().getFullYear();
-        const monthlyViews = activitiesPromise.value.filter((activity: Activity) => {
-          const activityDate = new Date(activity.timestamp);
-          return (
-            activityDate.getMonth() === currentMonth &&
-            activityDate.getFullYear() === currentYear
-          );
-        }).length;
+        const monthlyViews = activitiesPromise.value.filter(
+          (activity: Activity) => {
+            const activityDate = new Date(activity.timestamp);
+            return (
+              activityDate.getMonth() === currentMonth &&
+              activityDate.getFullYear() === currentYear
+            );
+          },
+        ).length;
 
         setProgressStats((prev) => ({
           ...prev,
@@ -138,7 +144,7 @@ export default function DashboardContent() {
       } else {
         console.error(
           "Error fetching recent activities:",
-          activitiesPromise.reason
+          activitiesPromise.reason,
         );
       }
       setIsLoadingActivities(false);
@@ -394,7 +400,7 @@ export default function DashboardContent() {
                         100,
                         (progressStats.completedThisMonth /
                           progressStats.monthlyGoal) *
-                          100
+                          100,
                       )}%`,
                     }}
                   ></div>
@@ -413,7 +419,7 @@ export default function DashboardContent() {
                     style={{
                       width: `${Math.min(
                         100,
-                        (progressStats.totalViewsThisMonth / 20) * 100
+                        (progressStats.totalViewsThisMonth / 20) * 100,
                       )}%`,
                     }}
                   ></div>
@@ -432,7 +438,7 @@ export default function DashboardContent() {
                     style={{
                       width: `${Math.min(
                         100,
-                        (progressStats.currentRentals / 3) * 100
+                        (progressStats.currentRentals / 3) * 100,
                       )}%`,
                     }}
                   ></div>
